@@ -1,7 +1,16 @@
-import { Button, ButtonGroup, Grid, GridItem, Show } from "@chakra-ui/react";
+import {
+  Button,
+  ButtonGroup,
+  Grid,
+  GridItem,
+  Show,
+  SimpleGrid,
+} from "@chakra-ui/react";
 import React from "react";
 import NavBar from "./components/NavBar";
 import { useEffect } from "react";
+import ColorModeSwitch from "./components/ColorModeSwitch";
+import ProductGrid from "./components/ProductGrid";
 
 const App = () => {
   useEffect(() => {
@@ -15,17 +24,17 @@ const App = () => {
         lg: `"nav nav" "aside main"`,
       }}
     >
-      <GridItem area="nav" bg="coral">
+      <GridItem area="nav">
         <NavBar />
       </GridItem>
       <Show above="base">
-        <GridItem area="aside" bg="yellow">
-          aside
-        </GridItem>
+        <GridItem area="aside">aside</GridItem>
       </Show>
-      <GridItem area="main" bg="blue">
+      <GridItem area="main">
         {" "}
-        main
+        <div className="App">
+          <ProductGrid />
+        </div>
       </GridItem>
     </Grid>
   );
