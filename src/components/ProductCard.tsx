@@ -4,23 +4,18 @@ import { Card, CardBody, Heading, Image } from "@chakra-ui/react";
 interface ProductCardProps {
   name: string;
   image: string;
-  size: number | string;
-  price: number | string;
+
+  onClick: () => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  name,
-  image,
-  size,
-  price,
-}) => {
+const ProductCard: React.FC<ProductCardProps> = ({ name, image, onClick }) => {
   return (
-    <Card>
+    <Card onClick={onClick} cursor="pointer">
       <Image src={image} alt={name} />
       <CardBody>
-        <Heading fontSize={20}>{name}</Heading>
-        <Heading fontSize={16}>Size: {size} cm</Heading>
-        <Heading fontSize={14}>{price} EGP</Heading>
+        <Heading size="md" fontSize={20}>
+          {name}
+        </Heading>
       </CardBody>
     </Card>
   );

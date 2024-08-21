@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
-import products from "./product";
+import products from "./product"; // Ensure this imports the array of products
 import { SimpleGrid, Button, Box } from "@chakra-ui/react";
 import ProductCard from "./ProductCard";
+import { useNavigate } from "react-router-dom";
 
 function shuffleArray<T>(array: T[]): T[] {
   const shuffledArray = [...array];
@@ -12,13 +13,17 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffledArray;
 }
 
-const ProductGrid = () => {
-  const [visibleCount, setVisibleCount] = useState(40);
-
+const ProductGrid: React.FC = () => {
+  const [visibleCount, setVisibleCount] = useState(20);
   const shuffledProducts = useMemo(() => shuffleArray(products), [products]);
+  const navigate = useNavigate();
 
   const showMoreItems = () => {
-    setVisibleCount((prevCount) => prevCount + 40);
+    setVisibleCount((prevCount) => prevCount + 20);
+  };
+
+  const handleCardClick = (productId: string) => {
+    navigate(`/product/${productId}`);
   };
 
   return (
@@ -29,8 +34,9 @@ const ProductGrid = () => {
             key={product.id}
             name={product.name}
             image={product.image}
-            price={product.price}
-            size={product.size}
+            // size={product.size}
+            // price={product.price}
+            onClick={() => handleCardClick(product.id)} // Pass the string ID
           />
         ))}
       </SimpleGrid>
