@@ -4,6 +4,7 @@ import { Grid, GridItem, Show } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 import ProductGrid from "./components/ProductGrid";
 import ProductPage from "./components/ProductPage";
+import HomePage from "./components/HomePage";
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -15,18 +16,19 @@ const App: React.FC = () => {
       <Grid
         templateAreas={{
           base: `"nav" "main"`,
-          lg: `"nav nav" "aside main"`,
+          lg: `"nav nav" "main"`,
         }}
       >
         <GridItem area="nav">
           <NavBar />
         </GridItem>
-        <Show above="base">
-          <GridItem area="aside">aside</GridItem>
-        </Show>
+
         <GridItem area="main">
           <Routes>
-            <Route path="/" element={<ProductGrid />} />
+            <Route path="/" element={<HomePage />} />{" "}
+            {/* Add the HomePage route */}
+            <Route path="/product-grid" element={<ProductGrid />} />{" "}
+            {/* Ensure the path is correctly used */}
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="*" element={<p>Page not found</p>} />
           </Routes>
