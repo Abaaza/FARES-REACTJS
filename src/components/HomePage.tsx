@@ -3,6 +3,8 @@ import React from "react";
 import Slider from "react-slick";
 import { Box, Button, Heading } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import video from "../assets/28.mp4";
+import ProductSlider from "./ProductSlider";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -21,6 +23,16 @@ const HomePage: React.FC = () => {
 
   return (
     <Box p={5}>
+      <video
+        src={video}
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{ width: "100%", height: "auto" }}
+      >
+        Your browser does not support the video tag.
+      </video>
       <Heading as="h1" mb={4}>
         Welcome to Our Store
       </Heading>
@@ -28,6 +40,7 @@ const HomePage: React.FC = () => {
       <Button mt={5} colorScheme="teal" onClick={goToProductGrid}>
         View Products
       </Button>
+      <ProductSlider />
     </Box>
   );
 };
