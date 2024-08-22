@@ -10,10 +10,9 @@ import "pure-react-carousel/dist/react-carousel.es.css"; // Import the carousel 
 import products from "./product"; // Update this path according to your project structure
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa"; // Import arrow icons from react-icons
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import styles from "./ProductSlider.module.css"; // Import the CSS module
 
 // Define types for Product and Variant
-// ProductSlider.tsx
-
 interface Variant {
   id: string;
   size: string;
@@ -57,6 +56,9 @@ const ProductSlider: React.FC = () => {
   const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handleSlideClick = (productId: string) => {
+    // Scroll to the top of the page
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     // Navigate to the product details page
     navigate(`/product/${productId}`);
   };
@@ -79,14 +81,16 @@ const ProductSlider: React.FC = () => {
             <Slide
               index={products.indexOf(product)}
               key={product.id}
-              onClick={() => handleSlideClick(product.id)} // Add onClick handler
-              style={{ cursor: "pointer" }} // Change cursor to pointer to indicate clickability
+              className={styles.slide} // Apply CSS module class
             >
-              <div style={{ padding: "10px" }}>
+              <div
+                onClick={() => handleSlideClick(product.id)} // Add onClick handler to the wrapper div
+                className={styles.details} // Apply CSS module class
+              >
                 <img
                   src={product.image}
                   alt={product.name}
-                  style={{ width: "100%", borderRadius: "8px" }}
+                  className={styles.image} // Apply CSS module class
                 />
                 <div>
                   <h2>{product.name}</h2>
