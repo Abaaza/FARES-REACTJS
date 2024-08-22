@@ -7,21 +7,25 @@ import {
   VStack,
   Image,
   useColorModeValue,
+  HStack,
 } from "@chakra-ui/react";
 import { useCart } from "./CartContext"; // Import the useCart hook
 import { useNavigate } from "react-router-dom";
 
 const CartPage: React.FC = () => {
-  const { cart } = useCart();
+  const { cart, removeItem } = useCart(); // Destructure removeItem
   const navigate = useNavigate();
 
   const handleCheckout = () => {
     navigate("/checkout");
   };
 
+  const handleRemoveItem = (itemId: string) => {
+    removeItem(itemId); // Call removeItem from context
+  };
+
   const totalPrice = cart.reduce((total, item) => total + item.price, 0);
 
-  // Define colors for light and dark modes
   const bgColor = useColorModeValue("gray.50", "gray.800");
   const textColor = useColorModeValue("gray.800", "gray.200");
   const itemBgColor = useColorModeValue("gray.100", "gray.900");
@@ -37,14 +41,16 @@ const CartPage: React.FC = () => {
         <Text>Your cart is empty</Text>
       ) : (
         <VStack spacing={4} align="stretch">
-          {cart.map((item, index) => (
-            <Box
-              key={index}
+          {cart.map((item) => (
+            <HStack
+              key={item.id}
               borderWidth="1px"
               borderRadius="md"
               p={4}
-              bg={itemBgColor} // Set background color based on color mode
+              bg={itemBgColor}
               boxShadow="md"
+              spacing={4}
+              align="center"
             >
               <Image
                 src={item.image}
@@ -52,14 +58,21 @@ const CartPage: React.FC = () => {
                 boxSize="100px"
                 objectFit="cover"
                 borderRadius="md"
-                mb={2}
               />
-              <Heading size="md" color={headingColor}>
-                {item.name}
-              </Heading>
-              <Text color={textColor}>Size: {item.size}</Text>
-              <Text color={textColor}>Price: {item.price} EGP</Text>
-            </Box>
+              <Box flex="1">
+                <Heading size="md" color={headingColor}>
+                  {item.name}
+                </Heading>
+                <Text color={textColor}>Size: {item.size}</Text>
+                <Text color={textColor}>Price: {item.price} EGP</Text>
+              </Box>
+              <Button
+                colorScheme="red"
+                onClick={() => handleRemoveItem(item.id)}
+              >
+                Remove
+              </Button>
+            </HStack>
           ))}
           <Box
             w="full"

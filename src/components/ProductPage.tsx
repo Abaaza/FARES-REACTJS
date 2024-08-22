@@ -23,7 +23,7 @@ const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const product = products.find((product) => product.id === id);
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { addItem } = useCart(); // Use addItem
 
   const [selectedVariant, setSelectedVariant] = useState<Variant | undefined>(
     product?.variants[0]
@@ -42,12 +42,14 @@ const ProductPage: React.FC = () => {
 
   const handleAddToCart = () => {
     if (selectedVariant) {
-      addToCart({
-        id: product.id,
+      addItem({
+        id: `${product.id}-${selectedVariant.id}`, // Ensure unique ID for cart item
         name: product.name,
         size: selectedVariant.size,
         price: selectedVariant.price,
+        image: product.image, // Ensure image is included if needed
       });
+      alert("Item added to cart!");
     }
   };
 

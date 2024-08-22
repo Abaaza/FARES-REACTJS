@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useState, ReactNode, useContext } from "react";
 
 interface CartItem {
   id: string;
@@ -8,30 +8,35 @@ interface CartItem {
   image: string;
 }
 
-interface CartContextType {
+interface CartContextProps {
   cart: CartItem[];
-  addToCart: (item: CartItem) => void;
+  addItem: (item: CartItem) => void;
+  removeItem: (itemId: string) => void;
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+const CartContext = createContext<CartContextProps | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
+export const CartProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  const addToCart = (item: CartItem) => {
+  const addItem = (item: CartItem) => {
     setCart((prevCart) => [...prevCart, item]);
   };
 
+  const removeItem = (itemId: string) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== itemId));
+  };
+
   return (
-    <CartContext.Provider value={{ cart, addToCart }}>
+    <CartContext.Provider value={{ cart, addItem, removeItem }}>
       {children}
     </CartContext.Provider>
   );
 };
 
-export const useCart = () => {
+export const useCart = (): CartContextProps => {
   const context = useContext(CartContext);
   if (context === undefined) {
     throw new Error("useCart must be used within a CartProvider");
