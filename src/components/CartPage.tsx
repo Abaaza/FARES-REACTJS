@@ -13,18 +13,17 @@ import { useCart } from "./CartContext"; // Import the useCart hook
 import { useNavigate } from "react-router-dom";
 
 const CartPage: React.FC = () => {
-  const { cart, removeItem } = useCart(); // Destructure removeItem
+  const { cart, removeItem, increaseQuantity, decreaseQuantity } = useCart();
   const navigate = useNavigate();
 
   const handleCheckout = () => {
     navigate("/checkout");
   };
 
-  const handleRemoveItem = (itemId: string) => {
-    removeItem(itemId); // Call removeItem from context
-  };
-
-  const totalPrice = cart.reduce((total, item) => total + item.price, 0);
+  const totalPrice = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
   const bgColor = useColorModeValue("gray.50", "gray.800");
   const textColor = useColorModeValue("gray.800", "gray.200");
@@ -42,37 +41,42 @@ const CartPage: React.FC = () => {
       ) : (
         <VStack spacing={4} align="stretch">
           {cart.map((item) => (
-            <HStack
+            <Box
               key={item.id}
               borderWidth="1px"
               borderRadius="md"
               p={4}
               bg={itemBgColor}
               boxShadow="md"
-              spacing={4}
-              align="center"
             >
-              <Image
-                src={item.image}
-                alt={item.name}
-                boxSize="100px"
-                objectFit="cover"
-                borderRadius="md"
-              />
-              <Box flex="1">
-                <Heading size="md" color={headingColor}>
-                  {item.name}
-                </Heading>
-                <Text color={textColor}>Size: {item.size}</Text>
-                <Text color={textColor}>Price: {item.price} EGP</Text>
-              </Box>
-              <Button
-                colorScheme="red"
-                onClick={() => handleRemoveItem(item.id)}
-              >
-                Remove
-              </Button>
-            </HStack>
+              <HStack spacing={4}>
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  boxSize="100px"
+                  objectFit="cover"
+                  borderRadius="md"
+                />
+                <VStack align="start" spacing={2}>
+                  <Heading size="md" color={headingColor}>
+                    {item.name}
+                  </Heading>
+                  <Text color={textColor}>Size: {item.size}</Text>
+                  <Text color={textColor}>Price: {item.price} EGP</Text>
+                  <HStack spacing={4}>
+                    <Button onClick={() => decreaseQuantity(item.id)}>-</Button>
+                    <Text color={textColor}>Quantity: {item.quantity}</Text>
+                    <Button onClick={() => increaseQuantity(item.id)}>+</Button>
+                    <Button
+                      onClick={() => removeItem(item.id)}
+                      colorScheme="red"
+                    >
+                      Remove
+                    </Button>
+                  </HStack>
+                </VStack>
+              </HStack>
+            </Box>
           ))}
           <Box
             w="full"

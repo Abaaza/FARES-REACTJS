@@ -15,8 +15,8 @@ import {
 import { useCart } from "./CartContext"; // Import the useCart hook
 
 const CheckoutPage: React.FC = () => {
-  const { cart, removeItem } = useCart(); // Destructure removeItem
-  const total = cart.reduce((acc, item) => acc + item.price, 0);
+  const { cart } = useCart();
+  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   const bgColor = useColorModeValue("gray.50", "gray.800");
   const textColor = useColorModeValue("gray.800", "gray.200");
@@ -25,11 +25,8 @@ const CheckoutPage: React.FC = () => {
   const headingColor = useColorModeValue("gray.800", "gray.100");
 
   const handlePlaceOrder = () => {
+    // Handle order placement logic here
     alert("Order placed successfully!");
-  };
-
-  const handleRemoveItem = (itemId: string) => {
-    removeItem(itemId); // Call removeItem from context
   };
 
   return (
@@ -39,34 +36,32 @@ const CheckoutPage: React.FC = () => {
       </Heading>
       <VStack spacing={4} align="stretch">
         {cart.map((item) => (
-          <HStack
+          <Box
             key={item.id}
             borderWidth="1px"
             borderRadius="md"
             p={4}
             bg={boxBgColor}
             boxShadow="md"
-            spacing={4}
-            align="center"
           >
-            <Image
-              src={item.image}
-              alt={item.name}
-              boxSize="100px"
-              objectFit="cover"
-              borderRadius="md"
-            />
-            <Box flex="1">
-              <Heading size="md" color={headingColor}>
-                {item.name}
-              </Heading>
-              <Text color={textColor}>Size: {item.size}</Text>
-              <Text color={textColor}>Price: {item.price} EGP</Text>
-            </Box>
-            <Button colorScheme="red" onClick={() => handleRemoveItem(item.id)}>
-              Remove
-            </Button>
-          </HStack>
+            <HStack spacing={4}>
+              <Image
+                src={item.image}
+                alt={item.name}
+                boxSize="100px"
+                objectFit="cover"
+                borderRadius="md"
+              />
+              <VStack align="start" spacing={2}>
+                <Heading size="md" color={headingColor}>
+                  {item.name}
+                </Heading>
+                <Text color={textColor}>Size: {item.size}</Text>
+                <Text color={textColor}>Price: {item.price} EGP</Text>
+                <Text color={textColor}>Quantity: {item.quantity}</Text>
+              </VStack>
+            </HStack>
+          </Box>
         ))}
 
         <Box mt={4}>

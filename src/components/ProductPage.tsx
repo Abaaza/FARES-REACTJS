@@ -23,7 +23,7 @@ const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const product = products.find((product) => product.id === id);
   const navigate = useNavigate();
-  const { addItem } = useCart(); // Use addItem
+  const { addItem } = useCart();
 
   const [selectedVariant, setSelectedVariant] = useState<Variant | undefined>(
     product?.variants[0]
@@ -48,6 +48,7 @@ const ProductPage: React.FC = () => {
         size: selectedVariant.size,
         price: selectedVariant.price,
         image: product.image, // Ensure image is included if needed
+        quantity: 1, // Initialize quantity as 1
       });
     }
   };
