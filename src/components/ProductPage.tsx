@@ -49,7 +49,6 @@ const ProductPage: React.FC = () => {
         price: selectedVariant.price,
         image: product.image, // Ensure image is included if needed
       });
-      alert("Item added to cart!");
     }
   };
 
