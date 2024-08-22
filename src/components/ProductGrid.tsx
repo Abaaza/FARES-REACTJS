@@ -1,8 +1,11 @@
+// ProductGrid.tsx
+
 import React, { useMemo, useState } from "react";
-import products from "./product"; // Ensure this imports the array of products
+import products from "./product";
 import { SimpleGrid, Button, Box } from "@chakra-ui/react";
 import ProductCard from "./ProductCard";
 import { useNavigate } from "react-router-dom";
+import { getPriceRange, getSizes } from "./productUtils";
 
 function shuffleArray<T>(array: T[]): T[] {
   const shuffledArray = [...array];
@@ -29,16 +32,22 @@ const ProductGrid: React.FC = () => {
   return (
     <>
       <SimpleGrid columns={{ sm: 2, md: 2, lg: 4 }} spacing={5}>
-        {shuffledProducts.slice(0, visibleCount).map((product) => (
-          <ProductCard
-            key={product.id}
-            name={product.name}
-            image={product.image}
-            // size={product.size}
-            // price={product.price}
-            onClick={() => handleCardClick(product.id)} // Pass the string ID
-          />
-        ))}
+        {shuffledProducts.slice(0, visibleCount).map((product) => {
+          const priceRange = getPriceRange(product.variants);
+          const sizes = getSizes(product.variants);
+
+          return (
+            <ProductCard
+              key={product.id}
+              name={product.name}
+              image={product.image}
+              priceRange={priceRange}
+              sizes={sizes}
+              sizeCount={sizes.length}
+              onClick={() => handleCardClick(product.id)}
+            />
+          );
+        })}
       </SimpleGrid>
       {visibleCount < shuffledProducts.length && (
         <Box textAlign="center" mt={5}>

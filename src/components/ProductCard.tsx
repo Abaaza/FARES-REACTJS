@@ -1,23 +1,40 @@
+// ProductCard.tsx
+
 import React from "react";
-import { Card, CardBody, Heading, Image } from "@chakra-ui/react";
+import { getUniqueSizeCount } from "./productUtils";
 
 interface ProductCardProps {
   name: string;
   image: string;
-
+  priceRange: { min: number; max: number };
+  sizes: string[];
   onClick: () => void;
+  sizeCount: number;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ name, image, onClick }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+  name,
+  image,
+  priceRange,
+  sizes,
+  onClick,
+  sizeCount,
+}) => {
   return (
-    <Card onClick={onClick} cursor="pointer">
-      <Image src={image} alt={name} />
-      <CardBody>
-        <Heading size="md" fontSize={20}>
-          {name}
-        </Heading>
-      </CardBody>
-    </Card>
+    <div onClick={onClick}>
+      <img
+        src={image}
+        alt={name}
+        style={{ width: "100%", borderRadius: "8px" }}
+      />
+      <div>
+        <h3>{name}</h3>
+        <p>
+          Price: {priceRange.min} - {priceRange.max} EGP
+        </p>
+        <p>{sizeCount} sizes available</p>
+      </div>
+    </div>
   );
 };
 

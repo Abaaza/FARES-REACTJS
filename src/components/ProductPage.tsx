@@ -4,6 +4,7 @@ import { Box, Image, Heading, Select, Text, Button } from "@chakra-ui/react";
 import products from "./product";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "./CartContext";
+import ProductSlider from "./ProductSlider";
 
 interface Variant {
   id: string;
@@ -88,6 +89,7 @@ const ProductPage: React.FC = () => {
         </>
       )}
       <Text mb={2}>{product.description}</Text>
+      <ProductSlider />
     </Box>
   );
 };

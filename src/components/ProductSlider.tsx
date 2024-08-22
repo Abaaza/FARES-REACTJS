@@ -12,6 +12,8 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa"; // Import arrow icon
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 
 // Define types for Product and Variant
+// ProductSlider.tsx
+
 interface Variant {
   id: string;
   size: string;
@@ -28,6 +30,28 @@ interface Product {
   theme: string;
   "3p": boolean;
 }
+
+interface PriceRange {
+  min: number;
+  max: number;
+}
+
+const getPriceRange = (variants: Variant[]): PriceRange => {
+  if (variants.length === 0) {
+    return { min: 0, max: 0 };
+  }
+
+  const prices = variants.map((variant) => variant.price);
+  return {
+    min: Math.min(...prices),
+    max: Math.max(...prices),
+  };
+};
+
+const getSizeCount = (variants: Variant[]): number => {
+  const sizes = variants.map((variant) => variant.size);
+  return new Set(sizes).size; // Return the count of unique sizes
+};
 
 const ProductSlider: React.FC = () => {
   const navigate = useNavigate(); // Initialize useNavigate hook
@@ -47,35 +71,40 @@ const ProductSlider: React.FC = () => {
       isIntrinsicHeight
     >
       <Slider>
-        {products.map((product: Product) => (
-          <Slide
-            index={products.indexOf(product)}
-            key={product.id}
-            onClick={() => handleSlideClick(product.id)} // Add onClick handler
-            style={{ cursor: "pointer" }} // Change cursor to pointer to indicate clickability
-          >
-            <div style={{ padding: "10px" }}>
-              <img
-                src={product.image}
-                alt={product.name}
-                style={{ width: "100%", borderRadius: "8px" }}
-              />
-              <div>
-                <h2>{product.name}</h2>
+        {products.map((product: Product) => {
+          const priceRange = getPriceRange(product.variants);
+          const sizeCount = getSizeCount(product.variants);
+
+          return (
+            <Slide
+              index={products.indexOf(product)}
+              key={product.id}
+              onClick={() => handleSlideClick(product.id)} // Add onClick handler
+              style={{ cursor: "pointer" }} // Change cursor to pointer to indicate clickability
+            >
+              <div style={{ padding: "10px" }}>
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  style={{ width: "100%", borderRadius: "8px" }}
+                />
                 <div>
-                  {product.variants.map((variant: Variant) => (
-                    <div key={variant.id}>
-                      <p>
-                        {variant.size}: {variant.price} EGP
-                      </p>
-                    </div>
-                  ))}
+                  <h2>{product.name}</h2>
+                  <div>
+                    <p>
+                      Price Range: {priceRange.min} - {priceRange.max} EGP
+                    </p>
+                    <p>
+                      {sizeCount} {sizeCount === 1 ? "size" : "sizes"} available
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </Slide>
-        ))}
+            </Slide>
+          );
+        })}
       </Slider>
+
       <ButtonBack
         style={{
           position: "absolute",
