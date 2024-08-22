@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Box, Image, Heading, Select, Text, Button } from "@chakra-ui/react";
 import products from "./product";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "./CartContext";
 
 interface Variant {
   id: string;
@@ -22,6 +23,7 @@ const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const product = products.find((product) => product.id === id);
   const navigate = useNavigate();
+  const { addToCart } = useCart();
 
   const [selectedVariant, setSelectedVariant] = useState<Variant | undefined>(
     product?.variants[0]
@@ -36,6 +38,17 @@ const ProductPage: React.FC = () => {
       (variant) => variant.id === event.target.value
     );
     setSelectedVariant(variant);
+  };
+
+  const handleAddToCart = () => {
+    if (selectedVariant) {
+      addToCart({
+        id: product.id,
+        name: product.name,
+        size: selectedVariant.size,
+        price: selectedVariant.price,
+      });
+    }
   };
 
   return (
@@ -67,7 +80,9 @@ const ProductPage: React.FC = () => {
         <>
           <Text mb={2}>Selected Size: {selectedVariant.size}</Text>
           <Text mb={4}>Price: {selectedVariant.price} EGP</Text>
-          <Button colorScheme="teal">Add to cart</Button>
+          <Button colorScheme="teal" onClick={handleAddToCart}>
+            Add to cart
+          </Button>
         </>
       )}
       <Text mb={2}>{product.description}</Text>
