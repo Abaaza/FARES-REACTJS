@@ -10,6 +10,7 @@ import { CartProvider } from "./components/CartContext";
 import CheckoutPage from "./components/CheckoutPage";
 import AboutUs from "./components/AboutUs";
 import Footer from "./components/Footer";
+import "./app.css";
 
 const App: React.FC = () => {
   useEffect(() => {

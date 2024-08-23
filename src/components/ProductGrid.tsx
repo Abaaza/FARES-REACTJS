@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from "react";
-import { SimpleGrid, Button, Box } from "@chakra-ui/react";
+import { Button, Box } from "@chakra-ui/react";
 import ProductCard from "./ProductCard";
 import { getPriceRange, getSizes } from "./productUtils";
 import { useProductFilters } from "./productUtils"; // Import the filter hook
 import SortSelector from "./SortSelector";
 import products from "./product"; // Import products
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { Container, StyledSimpleGrid } from "./StyledComponents";
 
 const ProductGrid: React.FC = () => {
   const [visibleCount, setVisibleCount] = useState(20);
@@ -47,7 +48,7 @@ const ProductGrid: React.FC = () => {
   };
 
   return (
-    <>
+    <Container>
       <SortSelector
         themes={Array.from(new Set(products.map((p) => p.theme)))}
         colors={Array.from(new Set(products.flatMap((p) => p.color)))}
@@ -60,7 +61,7 @@ const ProductGrid: React.FC = () => {
         onThreePSelect={(option) => setSelectedThreeP(option)}
         onResetFilters={handleResetFilters}
       />
-      <SimpleGrid columns={{ base: 2, sm: 2, md: 3, lg: 4 }} spacing={5}>
+      <StyledSimpleGrid columns={{ base: 2, sm: 2, md: 3, lg: 4 }} spacing={5}>
         {filteredProducts.slice(0, visibleCount).map((product) => {
           const priceRange = getPriceRange(product.variants);
           const sizes = getSizes(product.variants);
@@ -77,13 +78,13 @@ const ProductGrid: React.FC = () => {
             />
           );
         })}
-      </SimpleGrid>
+      </StyledSimpleGrid>
       {visibleCount < filteredProducts.length && (
         <Box textAlign="center" mt={5}>
           <Button onClick={showMoreItems}>Show More</Button>
         </Box>
       )}
-    </>
+    </Container>
   );
 };
 
