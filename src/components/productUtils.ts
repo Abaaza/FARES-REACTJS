@@ -1,5 +1,6 @@
 import { Variant } from "./types";
 import products from "./product";
+import { useMemo } from "react";
 
 export function getPriceRange(variants: Variant[]): { min: number; max: number } {
     if (variants.length === 0) {
@@ -32,5 +33,19 @@ export function getPriceRange(variants: Variant[]): { min: number; max: number }
     return Array.from(new Set(themes)); // Remove duplicates
   };
   
+  export const useProductFilters = () => {
+    const colors = useMemo(() => {
+      const allColors = products.flatMap((product) => product.color);
+      return Array.from(new Set(allColors));
+    }, []);
+  
+    const threePOptions = useMemo(() => [
+      { value: "On", label: "3 pieces" },
+      { value: "Off", label: "1 Piece" },
+    ], []);
+  
+    return { colors, threePOptions };
+  };
+
   // Other utility functions
   

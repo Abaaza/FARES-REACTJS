@@ -1,40 +1,35 @@
 import React, { useMemo, useState } from "react";
-import products from "./product";
 import { SimpleGrid, Button, Box } from "@chakra-ui/react";
 import ProductCard from "./ProductCard";
-import { useNavigate } from "react-router-dom";
 import { getPriceRange, getSizes } from "./productUtils";
+import { useProductFilters } from "./productUtils"; // Import the filter hook
 import SortSelector from "./SortSelector";
-import { getUniqueThemes } from "./productUtils"; // Import the utility function
-
-// Shuffle array function
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffledArray = [...array];
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-  }
-  return shuffledArray;
-}
+import products from "./product"; // Import products
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const ProductGrid: React.FC = () => {
   const [visibleCount, setVisibleCount] = useState(20);
-  const [selectedTheme, setSelectedTheme] = useState<string>("All");
-  const navigate = useNavigate();
+  const [selectedTheme, setSelectedTheme] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState<string>("");
+  const [selectedThreeP, setSelectedThreeP] = useState<string>("");
 
-  const uniqueThemes = useMemo(() => getUniqueThemes(products), [products]);
+  const { colors, threePOptions } = useProductFilters();
+  const navigate = useNavigate(); // Initialize useNavigate
 
-  // Filter products based on the selected theme
   const filteredProducts = useMemo(() => {
-    return selectedTheme === "All"
-      ? products
-      : products.filter((product) => product.theme === selectedTheme);
-  }, [selectedTheme]);
+    return products.filter((product) => {
+      const matchesTheme = selectedTheme
+        ? product.theme === selectedTheme
+        : true;
+      const matchesColor = selectedColor
+        ? product.color.includes(selectedColor)
+        : true;
+      const matchesThreeP =
+        selectedThreeP !== "" ? product.threePiece === selectedThreeP : true;
 
-  const shuffledProducts = useMemo(
-    () => shuffleArray(filteredProducts),
-    [filteredProducts]
-  );
+      return matchesTheme && matchesColor && matchesThreeP;
+    });
+  }, [selectedTheme, selectedColor, selectedThreeP]);
 
   const showMoreItems = () => {
     setVisibleCount((prevCount) => prevCount + 20);
@@ -44,13 +39,29 @@ const ProductGrid: React.FC = () => {
     navigate(`/product/${productId}`);
   };
 
+  const handleResetFilters = () => {
+    // Reset the state to initial values or default values
+    setSelectedTheme("");
+    setSelectedColor("");
+    setSelectedThreeP("");
+  };
+
   return (
     <>
-      <SimpleGrid
-        columns={{ base: 2, sm: 2, md: 3, lg: 4 }} // Responsive column configuration
-        spacing={5}
-      >
-        {shuffledProducts.slice(0, visibleCount).map((product) => {
+      <SortSelector
+        themes={Array.from(new Set(products.map((p) => p.theme)))}
+        colors={Array.from(new Set(products.flatMap((p) => p.color)))}
+        threePOptions={[
+          { value: "No", label: "1 Piece" },
+          { value: "Yes", label: "3 Pieces" },
+        ]}
+        onThemeSelect={setSelectedTheme}
+        onColorSelect={setSelectedColor}
+        onThreePSelect={(option) => setSelectedThreeP(option)}
+        onResetFilters={handleResetFilters}
+      />
+      <SimpleGrid columns={{ base: 2, sm: 2, md: 3, lg: 4 }} spacing={5}>
+        {filteredProducts.slice(0, visibleCount).map((product) => {
           const priceRange = getPriceRange(product.variants);
           const sizes = getSizes(product.variants);
 
@@ -67,8 +78,7 @@ const ProductGrid: React.FC = () => {
           );
         })}
       </SimpleGrid>
-      <SortSelector themes={uniqueThemes} onThemeSelect={setSelectedTheme} />
-      {visibleCount < shuffledProducts.length && (
+      {visibleCount < filteredProducts.length && (
         <Box textAlign="center" mt={5}>
           <Button onClick={showMoreItems}>Show More</Button>
         </Box>

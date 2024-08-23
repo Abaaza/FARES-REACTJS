@@ -19,42 +19,31 @@ const App: React.FC = () => {
   return (
     <Router>
       <CartProvider>
-        <Flex
-          direction="column"
-          minHeight="100vh" // Ensures the full height of the viewport is used
-        >
-          <Box flex="1">
-            <Grid
-              templateAreas={{
-                base: `"nav" "main"`,
-                lg: `"nav nav" "main"`,
-              }}
-            >
-              <GridItem area="nav">
-                <NavBar />
-              </GridItem>
-
-              <GridItem area="main">
-                <Routes>
-                  <Route path="/" element={<HomePage />} />{" "}
-                  {/* HomePage route */}
-                  <Route path="/product-grid" element={<ProductGrid />} />{" "}
-                  {/* ProductGrid route */}
-                  <Route path="/product/:id" element={<ProductPage />} />{" "}
-                  {/* ProductPage route */}
-                  <Route path="/cart" element={<CartPage />} />{" "}
-                  {/* CartPage route */}
-                  <Route path="/checkout" element={<CheckoutPage />} />{" "}
-                  {/* CheckoutPage route */}
-                  <Route path="/about" element={<AboutUs />} />{" "}
-                  {/* AboutUs route */}
-                  <Route path="*" element={<p>Page not found</p>} />{" "}
-                  {/* Fallback route */}
-                </Routes>
-              </GridItem>
-            </Grid>
-          </Box>
-          <Footer />
+        <Flex direction="column" minHeight="100vh">
+          <NavBar />{" "}
+          {/* Place the NavBar outside the Grid to make it fixed or sticky */}
+          <Grid
+            templateAreas={{
+              base: `"main"`,
+              lg: `"main"`,
+            }}
+            templateRows="auto 1fr" // Ensure main content takes the remaining space
+            flex="1"
+            paddingTop="60px" // Adjust based on the height of your NavBar
+          >
+            <GridItem area="main">
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/product-grid" element={<ProductGrid />} />
+                <Route path="/product/:id" element={<ProductPage />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/about" element={<AboutUs />} />
+                <Route path="*" element={<p>Page not found</p>} />
+              </Routes>
+            </GridItem>
+          </Grid>
+          <Footer /> {/* Footer at the bottom */}
         </Flex>
       </CartProvider>
     </Router>

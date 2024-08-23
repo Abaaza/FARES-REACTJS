@@ -12,7 +12,7 @@ export interface Product {
   variants: Variant[];
   color: string[]; // Changed to string[] to match the array of colors
   theme: string;
-  "3p": boolean; // Property names with special characters should be quoted
+  threePiece: string; // Property names with special characters should be quoted
 }
 
 const products: Product[] = [
@@ -22,7 +22,7 @@ const products: Product[] = [
     description: "This is a parent product.",
     color: ["blue", "white"],
     theme: "abstract",
-    "3p": false,
+    threePiece: "No",
     image:
       "https://www.wall-masters.com/wp-content/uploads/2021/10/574-scaled.jpg",
     variants: [
@@ -37,9 +37,9 @@ const products: Product[] = [
     id: "576",
     name: "Wall Frame 576",
     description: "This is a parent product.",
-    color: ["blue", "white"],
+    color: ["brown", "beige"],
     theme: "abstract",
-    "3p": false,
+    threePiece: "No",
     image:
       "https://www.wall-masters.com/wp-content/uploads/2021/10/576-scaled.jpg",
     variants: [
@@ -56,7 +56,7 @@ const products: Product[] = [
     description: "This is a parent product.",
     color: ["blue", "white"],
     theme: "floral",
-    "3p": false,
+    threePiece: "No",
     image:
       "https://www.wall-masters.com/wp-content/uploads/2021/10/493-scaled.jpg",
     variants: [
@@ -71,9 +71,9 @@ const products: Product[] = [
     id: "518",
     name: "Wall Frame 518",
     description: "This is a parent product.",
-    color: ["blue", "white"],
+    color: ["green"],
     theme: "abstract",
-    "3p": false,
+    threePiece: "No",
     image:
       "https://www.wall-masters.com/wp-content/uploads/2021/10/518-scaled.jpg",
     variants: [

@@ -1,30 +1,16 @@
+/* ProductSlider.module.css */
+.slide {
+  padding: 0 4px; /* Decrease the horizontal padding to reduce space between slides */
+}
 
-  
-  .slide {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-  }
-  
-  .image {
-    width: 100%;
-    border-radius: 8px;
-  }
-  
-  .details {
-    padding: 10px;
-  }
-  
-  .button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-  }
-  
-  .button:hover {
-    background-color: #0056b3;
-  }
-  
+.image {
+  width: 100%;
+  height: auto;
+}
+
+.details {
+  cursor: pointer; /* Indicate that the slide is clickable */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

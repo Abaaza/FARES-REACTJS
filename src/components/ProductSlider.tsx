@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   CarouselProvider,
   Slider,
@@ -6,9 +6,9 @@ import {
   ButtonBack,
   ButtonNext,
 } from "pure-react-carousel";
-import "pure-react-carousel/dist/react-carousel.es.css"; // Import the carousel styles
-import products from "./product"; // Update this path according to your project structure
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa"; // Import arrow icons from react-icons
+import "pure-react-carousel/dist/react-carousel.es.css"; // Import carousel styles
+import products from "./product"; // Update the path according to your project structure
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa"; // Import arrow icons
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import styles from "./ProductSlider.module.css"; // Import the CSS module
 
@@ -27,7 +27,7 @@ interface Product {
   variants: Variant[];
   color: string[];
   theme: string;
-  "3p": boolean;
+  threePiece: string; // Updated to string
 }
 
 interface PriceRange {
@@ -53,7 +53,27 @@ const getSizeCount = (variants: Variant[]): number => {
 };
 
 const ProductSlider: React.FC = () => {
+  const [visibleSlides, setVisibleSlides] = useState<number>(4);
   const navigate = useNavigate(); // Initialize useNavigate hook
+
+  useEffect(() => {
+    // Handle responsive slide count
+    const updateVisibleSlides = () => {
+      if (window.innerWidth < 768) {
+        // Adjust breakpoint as needed
+        setVisibleSlides(2);
+      } else {
+        setVisibleSlides(4);
+      }
+    };
+
+    updateVisibleSlides();
+    window.addEventListener("resize", updateVisibleSlides);
+
+    return () => {
+      window.removeEventListener("resize", updateVisibleSlides);
+    };
+  }, []);
 
   const handleSlideClick = (productId: string) => {
     // Scroll to the top of the page
@@ -68,7 +88,7 @@ const ProductSlider: React.FC = () => {
       naturalSlideWidth={100}
       naturalSlideHeight={125}
       totalSlides={products.length}
-      visibleSlides={2}
+      visibleSlides={visibleSlides}
       infinite
       isIntrinsicHeight
     >
