@@ -96,7 +96,7 @@ const ProductSlider: React.FC = () => {
                   <h2>{product.name}</h2>
                   <div>
                     <p>
-                      Price Range: {priceRange.min} - {priceRange.max} EGP
+                      Price: {priceRange.min} - {priceRange.max} EGP
                     </p>
                     <p>
                       {sizeCount} {sizeCount === 1 ? "size" : "sizes"} available

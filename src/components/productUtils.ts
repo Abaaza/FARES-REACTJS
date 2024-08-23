@@ -1,4 +1,5 @@
 import { Variant } from "./types";
+import products from "./product";
 
 export function getPriceRange(variants: Variant[]): { min: number; max: number } {
     if (variants.length === 0) {
@@ -21,3 +22,15 @@ export function getPriceRange(variants: Variant[]): { min: number; max: number }
     const uniqueSizes = Array.from(new Set(sizes));
     return uniqueSizes.length;
   }
+
+  // src/productUtils.ts
+  import { Product } from "./product" // Import the Product type
+
+  // Function to get unique themes from products
+  export const getUniqueThemes = (products: Product[]): string[] => {
+    const themes = products.map(product => product.theme);
+    return Array.from(new Set(themes)); // Remove duplicates
+  };
+  
+  // Other utility functions
+  

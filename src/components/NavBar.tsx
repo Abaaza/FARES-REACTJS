@@ -47,7 +47,7 @@ const NavBar: React.FC = () => {
   const totalPrice = cart.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
-  ); // **Highlighted Code**
+  );
 
   // Dynamic colors for different modes
   const bg = useColorModeValue("gray.800", "gray.800");
@@ -56,7 +56,16 @@ const NavBar: React.FC = () => {
   const badgeTextColor = useColorModeValue("black", "white");
 
   return (
-    <Box p={4} bg={bg} color={color}>
+    <Box
+      p={4}
+      bg={bg}
+      color={color}
+      position="fixed" // Keep navbar fixed at the top
+      top={0} // Align it to the top of the viewport
+      width="100%" // Make sure it spans the full width
+      zIndex={1000} // Ensure it stays above other elements
+      boxShadow="md" // Optional: Add a shadow for better visibility
+    >
       <Flex alignItems="center" justifyContent="space-between">
         <Image
           src={logo}
@@ -136,8 +145,7 @@ const NavBar: React.FC = () => {
                       <Box textAlign="right" w="full">
                         <Text fontWeight="bold">
                           Total Price: {totalPrice} EGP
-                        </Text>{" "}
-                        {/* **Highlighted Code** */}
+                        </Text>
                       </Box>
                       <Button
                         colorScheme="teal"
@@ -222,8 +230,7 @@ const NavBar: React.FC = () => {
                     <Box textAlign="right" w="full">
                       <Text fontWeight="bold">
                         Total Price: {totalPrice} EGP
-                      </Text>{" "}
-                      {/* **Highlighted Code** */}
+                      </Text>
                     </Box>
                     <Button
                       colorScheme="teal"

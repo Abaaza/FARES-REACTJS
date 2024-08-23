@@ -11,10 +11,10 @@
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
-    "@emotion/react": "^11.13.0",
+    "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@types/react-router-dom": "^5.3.3",
-    "framer-motion": "^11.3.28",
+    "framer-motion": "^11.3.30",
     "install": "^0.13.0",
     "npm": "^10.8.2",
     "pure-react-carousel": "^1.30.1",

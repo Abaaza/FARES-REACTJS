@@ -11,6 +11,7 @@ import {
   Image,
   useColorModeValue,
   HStack,
+  Select,
 } from "@chakra-ui/react";
 import { useCart } from "./CartContext"; // Import the useCart hook
 
@@ -75,12 +76,35 @@ const CheckoutPage: React.FC = () => {
           <Input placeholder="Your Name" bg={formBgColor} />
         </FormControl>
         <FormControl isRequired>
-          <FormLabel color={textColor}>Address</FormLabel>
-          <Input placeholder="Your Address" bg={formBgColor} />
+          <FormLabel color={textColor}>Phone Number </FormLabel>
+          <Input placeholder="Phone Number" bg={formBgColor} />
         </FormControl>
         <FormControl isRequired>
+          <FormLabel color={textColor}>Address 1</FormLabel>
+          <Input placeholder="Address 1" bg={formBgColor} />
+        </FormControl>
+        <FormControl isRequired>
+          <FormLabel color={textColor}>Address 2 </FormLabel>
+          <Input placeholder="Address 2" bg={formBgColor} />
+        </FormControl>
+        <FormControl isRequired>
+          <FormLabel color={textColor}>City </FormLabel>
+          <Input placeholder="City" bg={formBgColor} />
+        </FormControl>
+        <FormControl id="country" isRequired>
+          <FormLabel color={textColor}>Country</FormLabel>
+          <Input value="Egypt" isReadOnly bg={formBgColor} />
+        </FormControl>
+        <FormControl isRequired>
+          <FormLabel color={textColor}>Comments</FormLabel>
+          <Input placeholder="Comments" bg={formBgColor} />
+        </FormControl>
+        <FormControl id="payment-method" isRequired>
           <FormLabel color={textColor}>Payment Method</FormLabel>
-          <Input placeholder="Your Payment Method" bg={formBgColor} />
+          <Select placeholder="Select payment method" bg={formBgColor}>
+            <option value="cash">Cash on Delivery</option>
+            <option value="credit-card">Credit Card</option>
+          </Select>
         </FormControl>
 
         <Button colorScheme="teal" onClick={handlePlaceOrder}>

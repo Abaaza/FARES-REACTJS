@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Grid, GridItem, Show } from "@chakra-ui/react";
+import { Flex, Box, Grid, GridItem } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 import ProductGrid from "./components/ProductGrid";
 import ProductPage from "./components/ProductPage";
@@ -9,6 +9,7 @@ import CartPage from "./components/CartPage";
 import { CartProvider } from "./components/CartContext";
 import CheckoutPage from "./components/CheckoutPage";
 import AboutUs from "./components/AboutUs";
+import Footer from "./components/Footer";
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -18,31 +19,43 @@ const App: React.FC = () => {
   return (
     <Router>
       <CartProvider>
-        <Grid
-          templateAreas={{
-            base: `"nav" "main"`,
-            lg: `"nav nav" "main"`,
-          }}
+        <Flex
+          direction="column"
+          minHeight="100vh" // Ensures the full height of the viewport is used
         >
-          <GridItem area="nav">
-            <NavBar />
-          </GridItem>
+          <Box flex="1">
+            <Grid
+              templateAreas={{
+                base: `"nav" "main"`,
+                lg: `"nav nav" "main"`,
+              }}
+            >
+              <GridItem area="nav">
+                <NavBar />
+              </GridItem>
 
-          <GridItem area="main">
-            <Routes>
-              <Route path="/" element={<HomePage />} />{" "}
-              {/* Add the HomePage route */}
-              <Route path="/product-grid" element={<ProductGrid />} />{" "}
-              {/* Ensure the path is correctly used */}
-              <Route path="/product/:id" element={<ProductPage />} />
-              <Route path="/cart" element={<CartPage />} />{" "}
-              {/* Add route for CartPage */}
-              <Route path="/checkout" element={<CheckoutPage />} />
-              <Route path="/about" element={<AboutUs />} />
-              <Route path="*" element={<p>Page not found</p>} />
-            </Routes>
-          </GridItem>
-        </Grid>
+              <GridItem area="main">
+                <Routes>
+                  <Route path="/" element={<HomePage />} />{" "}
+                  {/* HomePage route */}
+                  <Route path="/product-grid" element={<ProductGrid />} />{" "}
+                  {/* ProductGrid route */}
+                  <Route path="/product/:id" element={<ProductPage />} />{" "}
+                  {/* ProductPage route */}
+                  <Route path="/cart" element={<CartPage />} />{" "}
+                  {/* CartPage route */}
+                  <Route path="/checkout" element={<CheckoutPage />} />{" "}
+                  {/* CheckoutPage route */}
+                  <Route path="/about" element={<AboutUs />} />{" "}
+                  {/* AboutUs route */}
+                  <Route path="*" element={<p>Page not found</p>} />{" "}
+                  {/* Fallback route */}
+                </Routes>
+              </GridItem>
+            </Grid>
+          </Box>
+          <Footer />
+        </Flex>
       </CartProvider>
     </Router>
   );

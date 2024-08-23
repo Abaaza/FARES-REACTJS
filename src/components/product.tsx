@@ -1,10 +1,10 @@
-interface Variant {
+export interface Variant {
   id: string;
   size: string;
   price: number;
 }
 
-interface Product {
+export interface Product {
   id: string;
   name: string;
   description: string;
@@ -55,7 +55,7 @@ const products: Product[] = [
     name: "Wall Frame 493",
     description: "This is a parent product.",
     color: ["blue", "white"],
-    theme: "abstract",
+    theme: "floral",
     "3p": false,
     image:
       "https://www.wall-masters.com/wp-content/uploads/2021/10/493-scaled.jpg",
