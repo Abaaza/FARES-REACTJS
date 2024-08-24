@@ -7,6 +7,8 @@ import {
   MenuList,
   Wrap,
   WrapItem,
+  Checkbox,
+  VStack,
 } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 
@@ -15,7 +17,7 @@ interface SortSelectorProps {
   colors: string[];
   threePOptions: { value: string; label: string }[];
   onThemeSelect: (theme: string) => void;
-  onColorSelect: (color: string) => void;
+  onColorSelect: (colors: string[]) => void; // Accept multiple colors
   onThreePSelect: (option: string) => void;
   onResetFilters: () => void;
 }
@@ -30,7 +32,7 @@ const SortSelector: React.FC<SortSelectorProps> = ({
   onResetFilters,
 }) => {
   const [selectedTheme, setSelectedTheme] = React.useState<string>("");
-  const [selectedColor, setSelectedColor] = React.useState<string>("");
+  const [selectedColors, setSelectedColors] = React.useState<string[]>([]);
   const [selectedThreeP, setSelectedThreeP] = React.useState<string>("");
 
   const handleThemeSelect = (theme: string) => {
@@ -39,8 +41,11 @@ const SortSelector: React.FC<SortSelectorProps> = ({
   };
 
   const handleColorSelect = (color: string) => {
-    setSelectedColor(color);
-    onColorSelect(color);
+    const updatedColors = selectedColors.includes(color)
+      ? selectedColors.filter((c) => c !== color)
+      : [...selectedColors, color];
+    setSelectedColors(updatedColors);
+    onColorSelect(updatedColors);
   };
 
   const handleThreePSelect = (option: string) => {
@@ -49,13 +54,19 @@ const SortSelector: React.FC<SortSelectorProps> = ({
   };
 
   const handleResetFilters = () => {
-    // Reset the local state values to their default states
     setSelectedTheme("");
-    setSelectedColor("");
+    setSelectedColors([]);
     setSelectedThreeP("");
-
-    // Call the parent reset function
     onResetFilters();
+  };
+
+  const getSelectedColorsLabel = () => {
+    if (selectedColors.length === 0) return "Color";
+    if (selectedColors.length === 1)
+      return (
+        selectedColors[0].charAt(0).toUpperCase() + selectedColors[0].slice(1)
+      );
+    return `${selectedColors.length} Colors Selected`;
   };
 
   return (
@@ -77,18 +88,22 @@ const SortSelector: React.FC<SortSelectorProps> = ({
         </Menu>
       </WrapItem>
       <WrapItem>
-        <Menu>
+        <Menu closeOnSelect={false}>
           <MenuButton as={Button} rightIcon={<BsChevronDown />}>
-            {selectedColor
-              ? selectedColor.charAt(0).toUpperCase() + selectedColor.slice(1)
-              : "Color"}
+            {getSelectedColorsLabel()}
           </MenuButton>
           <MenuList>
-            {colors.map((color) => (
-              <MenuItem key={color} onClick={() => handleColorSelect(color)}>
-                {color.charAt(0).toUpperCase() + color.slice(1)}
-              </MenuItem>
-            ))}
+            <VStack align="start" spacing={1} p={2}>
+              {colors.map((color) => (
+                <Checkbox
+                  key={color}
+                  isChecked={selectedColors.includes(color)}
+                  onChange={() => handleColorSelect(color)}
+                >
+                  {color.charAt(0).toUpperCase() + color.slice(1)}
+                </Checkbox>
+              ))}
+            </VStack>
           </MenuList>
         </Menu>
       </WrapItem>

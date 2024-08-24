@@ -2,35 +2,36 @@ import React, { useMemo, useState } from "react";
 import { Button, Box } from "@chakra-ui/react";
 import ProductCard from "./ProductCard";
 import { getPriceRange, getSizes } from "./productUtils";
-import { useProductFilters } from "./productUtils"; // Import the filter hook
+import { useProductFilters } from "./productUtils";
 import SortSelector from "./SortSelector";
-import products from "./product"; // Import products
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import products from "./product";
+import { useNavigate } from "react-router-dom";
 import { Container, StyledSimpleGrid } from "./StyledComponents";
 
 const ProductGrid: React.FC = () => {
   const [visibleCount, setVisibleCount] = useState(20);
   const [selectedTheme, setSelectedTheme] = useState<string>("");
-  const [selectedColor, setSelectedColor] = useState<string>("");
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedThreeP, setSelectedThreeP] = useState<string>("");
 
   const { colors, threePOptions } = useProductFilters();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       const matchesTheme = selectedTheme
         ? product.theme === selectedTheme
         : true;
-      const matchesColor = selectedColor
-        ? product.color.includes(selectedColor)
-        : true;
+      const matchesColor =
+        selectedColors.length > 0
+          ? selectedColors.every((color) => product.color.includes(color))
+          : true;
       const matchesThreeP =
         selectedThreeP !== "" ? product.threePiece === selectedThreeP : true;
 
       return matchesTheme && matchesColor && matchesThreeP;
     });
-  }, [selectedTheme, selectedColor, selectedThreeP]);
+  }, [selectedTheme, selectedColors, selectedThreeP]);
 
   const showMoreItems = () => {
     setVisibleCount((prevCount) => prevCount + 20);
@@ -41,9 +42,8 @@ const ProductGrid: React.FC = () => {
   };
 
   const handleResetFilters = () => {
-    // Reset the state to initial values or default values
     setSelectedTheme("");
-    setSelectedColor("");
+    setSelectedColors([]);
     setSelectedThreeP("");
   };
 
@@ -58,7 +58,7 @@ const ProductGrid: React.FC = () => {
             { value: "Yes", label: "3 Pieces" },
           ]}
           onThemeSelect={setSelectedTheme}
-          onColorSelect={setSelectedColor}
+          onColorSelect={setSelectedColors} // Pass the updated state setter
           onThreePSelect={(option) => setSelectedThreeP(option)}
           onResetFilters={handleResetFilters}
         />
