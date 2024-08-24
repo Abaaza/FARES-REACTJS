@@ -62,7 +62,15 @@ const ProductPage: React.FC = () => {
       <Heading as="h1" mb={4}>
         {product.name}
       </Heading>
-      <Image src={product.image} alt={product.name} mb={4} boxSize={500} />
+      <Image
+        src={product.image}
+        alt={product.name}
+        mb={4}
+        maxW="100%" // Ensure the image fits within its container
+        height="auto" // Maintain aspect ratio
+        objectFit="contain" // Avoid stretching
+        boxSize={{ base: "100%", md: "500px" }} // Responsive sizing
+      />
 
       {/* Variant Selector */}
       <Select
