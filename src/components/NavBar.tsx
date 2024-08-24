@@ -42,14 +42,17 @@ const NavBar: React.FC = () => {
     navigate("/cart");
   };
 
-  // Calculate total items and total price
+  const handleLinkClick = (path: string) => {
+    navigate(path);
+    onClose(); // Close the menu after navigating
+  };
+
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   const totalPrice = cart.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
 
-  // Dynamic colors for different modes
   const bg = useColorModeValue("gray.800", "gray.800");
   const color = useColorModeValue("white", "white");
   const badgeBgColor = useColorModeValue("gray.100", "gray.700");
@@ -60,11 +63,11 @@ const NavBar: React.FC = () => {
       p={4}
       bg={bg}
       color={color}
-      position="fixed" // Keep navbar fixed at the top
-      top={0} // Align it to the top of the viewport
-      width="100%" // Make sure it spans the full width
-      zIndex={1000} // Ensure it stays above other elements
-      boxShadow="md" // Optional: Add a shadow for better visibility
+      position="fixed"
+      top={0}
+      width="100%"
+      zIndex={1000}
+      boxShadow="md"
     >
       <Flex alignItems="center" justifyContent="space-between">
         <Image
@@ -87,9 +90,9 @@ const NavBar: React.FC = () => {
           </>
         ) : (
           <HStack spacing={8}>
-            <Link onClick={() => navigate("/")}>Home</Link>
-            <Link onClick={() => navigate("/about")}>About Us</Link>
-            <Link onClick={() => navigate("/product-grid")}>Shop</Link>
+            <Link onClick={() => handleLinkClick("/")}>Home</Link>
+            <Link onClick={() => handleLinkClick("/about")}>About Us</Link>
+            <Link onClick={() => handleLinkClick("/product-grid")}>Shop</Link>
             <ColorModeSwitch />
             <Popover trigger="hover">
               <PopoverTrigger>
@@ -141,7 +144,6 @@ const NavBar: React.FC = () => {
                           </Box>
                         </Flex>
                       ))}
-                      {/* Display total price */}
                       <Box textAlign="right" w="full">
                         <Text fontWeight="bold">
                           Total Price: {totalPrice} EGP
@@ -172,9 +174,9 @@ const NavBar: React.FC = () => {
           borderRadius="md"
           boxShadow="md"
         >
-          <Link onClick={() => navigate("/")}>Home</Link>
-          <Link onClick={() => navigate("/about")}>About Us</Link>
-          <Link onClick={() => navigate("/product-grid")}>Shop</Link>
+          <Link onClick={() => handleLinkClick("/")}>Home</Link>
+          <Link onClick={() => handleLinkClick("/about")}>About Us</Link>
+          <Link onClick={() => handleLinkClick("/product-grid")}>Shop</Link>
           <ColorModeSwitch />
           <Popover trigger="hover">
             <PopoverTrigger>
@@ -226,7 +228,6 @@ const NavBar: React.FC = () => {
                         </Box>
                       </Flex>
                     ))}
-                    {/* Display total price */}
                     <Box textAlign="right" w="full">
                       <Text fontWeight="bold">
                         Total Price: {totalPrice} EGP

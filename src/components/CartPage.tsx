@@ -8,9 +8,11 @@ import {
   Image,
   useColorModeValue,
   HStack,
+  IconButton,
 } from "@chakra-ui/react";
 import { useCart } from "./CartContext"; // Import the useCart hook
 import { useNavigate } from "react-router-dom";
+import { FaTrash } from "react-icons/fa"; // Import a trash icon for the remove button
 
 const CartPage: React.FC = () => {
   const { cart, removeItem, increaseQuantity, decreaseQuantity } = useCart();
@@ -49,7 +51,7 @@ const CartPage: React.FC = () => {
               bg={itemBgColor}
               boxShadow="md"
             >
-              <HStack spacing={4}>
+              <HStack spacing={4} align="center">
                 <Image
                   src={item.image}
                   alt={item.name}
@@ -57,22 +59,27 @@ const CartPage: React.FC = () => {
                   objectFit="cover"
                   borderRadius="md"
                 />
-                <VStack align="start" spacing={2}>
+                <VStack align="start" spacing={2} flex="1">
                   <Heading size="md" color={headingColor}>
                     {item.name}
                   </Heading>
                   <Text color={textColor}>Size: {item.size}</Text>
                   <Text color={textColor}>Price: {item.price} EGP</Text>
-                  <HStack spacing={4}>
-                    <Button onClick={() => decreaseQuantity(item.id)}>-</Button>
-                    <Text color={textColor}>Quantity: {item.quantity}</Text>
-                    <Button onClick={() => increaseQuantity(item.id)}>+</Button>
-                    <Button
-                      onClick={() => removeItem(item.id)}
-                      colorScheme="red"
-                    >
-                      Remove
+                  <HStack spacing={2}>
+                    <Button size="sm" onClick={() => decreaseQuantity(item.id)}>
+                      -
                     </Button>
+                    <Text color={textColor}>Qty: {item.quantity}</Text>
+                    <Button size="sm" onClick={() => increaseQuantity(item.id)}>
+                      +
+                    </Button>
+                    <IconButton
+                      aria-label="Remove item"
+                      icon={<FaTrash />}
+                      colorScheme="red"
+                      size="sm"
+                      onClick={() => removeItem(item.id)}
+                    />
                   </HStack>
                 </VStack>
               </HStack>

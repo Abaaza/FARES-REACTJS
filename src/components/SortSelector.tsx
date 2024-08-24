@@ -5,7 +5,8 @@ import {
   MenuButton,
   Button,
   MenuList,
-  HStack,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 
@@ -58,52 +59,60 @@ const SortSelector: React.FC<SortSelectorProps> = ({
   };
 
   return (
-    <HStack spacing={4} mb={4}>
-      <Menu>
-        <MenuButton as={Button} rightIcon={<BsChevronDown />}>
-          {selectedTheme
-            ? selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)
-            : "Theme"}
-        </MenuButton>
-        <MenuList>
-          {themes.map((theme) => (
-            <MenuItem key={theme} onClick={() => handleThemeSelect(theme)}>
-              {theme.charAt(0).toUpperCase() + theme.slice(1)}
-            </MenuItem>
-          ))}
-        </MenuList>
-      </Menu>
-      <Menu>
-        <MenuButton as={Button} rightIcon={<BsChevronDown />}>
-          {selectedColor
-            ? selectedColor.charAt(0).toUpperCase() + selectedColor.slice(1)
-            : "Color"}
-        </MenuButton>
-        <MenuList>
-          {colors.map((color) => (
-            <MenuItem key={color} onClick={() => handleColorSelect(color)}>
-              {color.charAt(0).toUpperCase() + color.slice(1)}
-            </MenuItem>
-          ))}
-        </MenuList>
-      </Menu>
-      <Menu>
-        <MenuButton as={Button} rightIcon={<BsChevronDown />}>
-          {selectedThreeP
-            ? threePOptions.find((option) => option.value === selectedThreeP)
-                ?.label || "No of pieces"
-            : "No of pieces"}
-        </MenuButton>
-        <MenuList>
-          {threePOptions.map(({ value, label }) => (
-            <MenuItem key={value} onClick={() => handleThreePSelect(value)}>
-              {label}
-            </MenuItem>
-          ))}
-        </MenuList>
-      </Menu>
-      <Button onClick={handleResetFilters}>Reset Filters</Button>
-    </HStack>
+    <Wrap spacing={2} mb={4} direction={{ base: "column", sm: "row" }}>
+      <WrapItem>
+        <Menu>
+          <MenuButton as={Button} rightIcon={<BsChevronDown />}>
+            {selectedTheme
+              ? selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)
+              : "Theme"}
+          </MenuButton>
+          <MenuList>
+            {themes.map((theme) => (
+              <MenuItem key={theme} onClick={() => handleThemeSelect(theme)}>
+                {theme.charAt(0).toUpperCase() + theme.slice(1)}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+      </WrapItem>
+      <WrapItem>
+        <Menu>
+          <MenuButton as={Button} rightIcon={<BsChevronDown />}>
+            {selectedColor
+              ? selectedColor.charAt(0).toUpperCase() + selectedColor.slice(1)
+              : "Color"}
+          </MenuButton>
+          <MenuList>
+            {colors.map((color) => (
+              <MenuItem key={color} onClick={() => handleColorSelect(color)}>
+                {color.charAt(0).toUpperCase() + color.slice(1)}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+      </WrapItem>
+      <WrapItem>
+        <Menu>
+          <MenuButton as={Button} rightIcon={<BsChevronDown />}>
+            {selectedThreeP
+              ? threePOptions.find((option) => option.value === selectedThreeP)
+                  ?.label || "No of pieces"
+              : "No of pieces"}
+          </MenuButton>
+          <MenuList>
+            {threePOptions.map(({ value, label }) => (
+              <MenuItem key={value} onClick={() => handleThreePSelect(value)}>
+                {label}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+      </WrapItem>
+      <WrapItem>
+        <Button onClick={handleResetFilters}>Reset Filters</Button>
+      </WrapItem>
+    </Wrap>
   );
 };
 

@@ -11,6 +11,7 @@
   overflow-x: hidden;
   padding: 0;
   margin: 0;
+  
 }
 
 /* Prevent images and iframes from causing overflow */
@@ -18,23 +19,29 @@
 .container iframe {
   max-width: 100%;
   height: auto;
+  
 }
 
 /* Flexbox adjustments */
 .container {
   display: flex;
   flex-wrap: wrap;
+  
 }
 
 .item {
   flex: 1 1 auto;
   max-width: 100%;
+  
 }
 
 /* Grid adjustments */
 .container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(0, 1fr));
+  
+  
+  
 }
 
 .item {
@@ -44,4 +51,6 @@
 /* Global overflow settings */
 body {
   overflow-x: hidden;
+  
+  
 }

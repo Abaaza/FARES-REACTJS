@@ -49,18 +49,20 @@ const ProductGrid: React.FC = () => {
 
   return (
     <Container>
-      <SortSelector
-        themes={Array.from(new Set(products.map((p) => p.theme)))}
-        colors={Array.from(new Set(products.flatMap((p) => p.color)))}
-        threePOptions={[
-          { value: "No", label: "1 Piece" },
-          { value: "Yes", label: "3 Pieces" },
-        ]}
-        onThemeSelect={setSelectedTheme}
-        onColorSelect={setSelectedColor}
-        onThreePSelect={(option) => setSelectedThreeP(option)}
-        onResetFilters={handleResetFilters}
-      />
+      <Box mt={5}>
+        <SortSelector
+          themes={Array.from(new Set(products.map((p) => p.theme)))}
+          colors={Array.from(new Set(products.flatMap((p) => p.color)))}
+          threePOptions={[
+            { value: "No", label: "1 Piece" },
+            { value: "Yes", label: "3 Pieces" },
+          ]}
+          onThemeSelect={setSelectedTheme}
+          onColorSelect={setSelectedColor}
+          onThreePSelect={(option) => setSelectedThreeP(option)}
+          onResetFilters={handleResetFilters}
+        />
+      </Box>
       <StyledSimpleGrid columns={{ base: 2, sm: 2, md: 3, lg: 4 }} spacing={5}>
         {filteredProducts.slice(0, visibleCount).map((product) => {
           const priceRange = getPriceRange(product.variants);
