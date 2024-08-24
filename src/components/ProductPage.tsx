@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Image, Heading, Select, Text, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Image,
+  Heading,
+  Select,
+  Text,
+  Button,
+  SimpleGrid,
+  VStack,
+  useBreakpointValue,
+  useColorModeValue, // Import useColorModeValue
+} from "@chakra-ui/react";
 import products from "./product";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "./CartContext";
@@ -16,8 +27,11 @@ interface Product {
   id: string;
   name: string;
   description: string;
-  image: string;
+  images: string[]; // Allow multiple images
   variants: Variant[];
+  color: string[];
+  theme: string;
+  threePiece: string;
 }
 
 const ProductPage: React.FC = () => {
@@ -29,6 +43,9 @@ const ProductPage: React.FC = () => {
   const [selectedVariant, setSelectedVariant] = useState<Variant | undefined>(
     product?.variants[0]
   );
+  const [selectedImage, setSelectedImage] = useState<string>(
+    product?.images[0] || "" // Provide a fallback to an empty string
+  );
 
   if (!product) {
     return <p>Product not found</p>;
@@ -36,7 +53,7 @@ const ProductPage: React.FC = () => {
 
   const handleVariantChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const variant = product.variants.find(
-      (variant) => variant.id === event.target.value
+      (variant: Variant) => variant.id === event.target.value
     );
     setSelectedVariant(variant);
   };
@@ -48,56 +65,107 @@ const ProductPage: React.FC = () => {
         name: product.name,
         size: selectedVariant.size,
         price: selectedVariant.price,
-        image: product.image, // Ensure image is included if needed
+        image: selectedImage, // Use the selected image
         quantity: 1, // Initialize quantity as 1
       });
     }
   };
 
+  // Use Chakra UI's breakpoint value for responsive padding
+  const padding = useBreakpointValue({ base: "4", md: "5" });
+
+  // Use Chakra UI's color mode value for dynamic background color
+  const descriptionBg = useColorModeValue("gray.50", "gray.700");
+
   return (
-    <Box p={5}>
+    <Box p={padding}>
       <Button onClick={() => navigate(-1)} mb={4}>
         Back
       </Button>
-      <Heading as="h1" mb={4}>
-        {product.name}
-      </Heading>
-      <Image
-        src={product.image}
-        alt={product.name}
-        mb={4}
-        maxW="100%" // Ensure the image fits within its container
-        height="auto" // Maintain aspect ratio
-        objectFit="contain" // Avoid stretching
-        boxSize={{ base: "100%", md: "500px" }} // Responsive sizing
-      />
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 4, md: 10 }}>
+        <VStack align="stretch">
+          {/* Main Image */}
+          <Image
+            src={selectedImage}
+            alt={product.name}
+            maxW="100%"
+            height="auto"
+            objectFit="contain"
+            boxSize={{ base: "100%", md: "500px" }}
+            mb={4}
+          />
 
-      {/* Variant Selector */}
-      <Select
-        placeholder="Select size"
-        onChange={handleVariantChange}
-        value={selectedVariant?.id}
-        mb={4}
-      >
-        {product.variants.map((variant) => (
-          <option key={variant.id} value={variant.id}>
-            {variant.size} - {variant.price} EGP
-          </option>
-        ))}
-      </Select>
+          {/* Thumbnail Images */}
+          <SimpleGrid
+            columns={{ base: 3, md: product.images.length }}
+            spacing={2}
+          >
+            {product.images.map((image: string, index: number) => (
+              <Image
+                key={index}
+                src={image}
+                alt={`Thumbnail ${index + 1}`}
+                boxSize={{ base: "80px", md: "100px" }}
+                objectFit="cover"
+                cursor="pointer"
+                border={selectedImage === image ? "2px solid teal" : "none"}
+                onClick={() => setSelectedImage(image)}
+              />
+            ))}
+          </SimpleGrid>
+        </VStack>
 
-      {/* Display selected variant details */}
-      {selectedVariant && (
-        <>
-          <Text mb={2}>Selected Size: {selectedVariant.size}</Text>
-          <Text mb={4}>Price: {selectedVariant.price} EGP</Text>
-          <Button colorScheme="teal" onClick={handleAddToCart}>
-            Add to cart
-          </Button>
-        </>
-      )}
-      <Text mb={2}>{product.description}</Text>
-      <ProductSlider />
+        <VStack align="stretch" spacing={4}>
+          <Heading as="h1" mb={4} fontSize={{ base: "xl", md: "2xl" }}>
+            {product.name}
+          </Heading>
+
+          {/* Variant Selector */}
+          <Select
+            placeholder="Select size"
+            onChange={handleVariantChange}
+            value={selectedVariant?.id}
+            mb={4}
+          >
+            {product.variants.map((variant: Variant) => (
+              <option key={variant.id} value={variant.id}>
+                {variant.size} - {variant.price} EGP
+              </option>
+            ))}
+          </Select>
+
+          {/* Display selected variant details */}
+          {selectedVariant && (
+            <>
+              <Text mb={0}>Selected Size: {selectedVariant.size}</Text>
+              <Text mb={0}>Price: {selectedVariant.price} EGP</Text>
+              <Text mb={0}>Material: Canvas</Text>
+              <Button colorScheme="teal" onClick={handleAddToCart}>
+                Add to cart
+              </Button>
+            </>
+          )}
+
+          {/* Product Description */}
+          <Box
+            p={4}
+            borderWidth="1px"
+            borderRadius="md"
+            boxShadow="md"
+            bg={descriptionBg} // Use the dynamic background color
+          >
+            <Text>{product.description}</Text>
+            <Text>Theme: {product.theme}</Text>
+            <Text>Colors: {product.color.join(", ")}</Text>
+            <Text>Three Piece: {product.threePiece}</Text>
+          </Box>
+        </VStack>
+      </SimpleGrid>
+
+      {/* Product Slider for related items */}
+      <Box mt={8}>
+        <ProductSlider />
+      </Box>
     </Box>
   );
 };

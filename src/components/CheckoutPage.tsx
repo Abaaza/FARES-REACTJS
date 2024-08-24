@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Heading,
@@ -15,9 +15,26 @@ import {
 } from "@chakra-ui/react";
 import { useCart } from "./CartContext"; // Import the useCart hook
 
+const SHIPPING_COST = 70;
+const FREE_SHIPPING_THRESHOLD = 2000;
+
 const CheckoutPage: React.FC = () => {
   const { cart } = useCart();
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+  // Calculate shipping cost
+  const shippingCost = total >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+
+  // Total amount including shipping
+  const grandTotal = total + shippingCost;
+
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address1, setAddress1] = useState("");
+  const [address2, setAddress2] = useState("");
+  const [city, setCity] = useState("");
+  const [comments, setComments] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
 
   const bgColor = useColorModeValue("gray.50", "gray.800");
   const textColor = useColorModeValue("gray.800", "gray.200");
@@ -26,7 +43,43 @@ const CheckoutPage: React.FC = () => {
   const headingColor = useColorModeValue("gray.800", "gray.100");
 
   const handlePlaceOrder = () => {
-    // Handle order placement logic here
+    const order = {
+      customer: {
+        name,
+        phone,
+        address1,
+        address2,
+        city,
+        comments,
+      },
+      paymentMethod,
+      cart,
+      total,
+      shippingCost,
+      grandTotal,
+    };
+
+    // Example: Log the order to the console (you can replace this with an API call)
+    console.log("Order Details:", order);
+
+    // Example: Send the order data to an API endpoint
+    // fetch('/api/place-order', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(order),
+    // })
+    // .then(response => response.json())
+    // .then(data => {
+    //   console.log('Success:', data);
+    //   alert('Order placed successfully!');
+    // })
+    // .catch((error) => {
+    //   console.error('Error:', error);
+    //   alert('There was an error placing your order. Please try again.');
+    // });
+
     alert("Order placed successfully!");
   };
 
@@ -66,30 +119,61 @@ const CheckoutPage: React.FC = () => {
         ))}
 
         <Box mt={4}>
-          <Heading size="lg" color={headingColor}>
-            Total: {total} EGP
+          <Heading size="m" color={headingColor}>
+            Subtotal: {total} EGP
+          </Heading>
+          <Text fontSize="lg" color={textColor}>
+            Shipping: {shippingCost} EGP
+          </Text>
+          <Heading size="m" color={headingColor}>
+            Total: {grandTotal} EGP
           </Heading>
         </Box>
 
         <FormControl isRequired>
           <FormLabel color={textColor}>Name</FormLabel>
-          <Input placeholder="Your Name" bg={formBgColor} />
+          <Input
+            placeholder="Your Name"
+            bg={formBgColor}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </FormControl>
         <FormControl isRequired>
-          <FormLabel color={textColor}>Phone Number </FormLabel>
-          <Input placeholder="Phone Number" bg={formBgColor} />
+          <FormLabel color={textColor}>Phone Number</FormLabel>
+          <Input
+            placeholder="Phone Number"
+            bg={formBgColor}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
         </FormControl>
         <FormControl isRequired>
           <FormLabel color={textColor}>Address 1</FormLabel>
-          <Input placeholder="Address 1" bg={formBgColor} />
+          <Input
+            placeholder="Address 1"
+            bg={formBgColor}
+            value={address1}
+            onChange={(e) => setAddress1(e.target.value)}
+          />
         </FormControl>
         <FormControl isRequired>
-          <FormLabel color={textColor}>Address 2 </FormLabel>
-          <Input placeholder="Address 2" bg={formBgColor} />
+          <FormLabel color={textColor}>Address 2</FormLabel>
+          <Input
+            placeholder="Address 2"
+            bg={formBgColor}
+            value={address2}
+            onChange={(e) => setAddress2(e.target.value)}
+          />
         </FormControl>
         <FormControl isRequired>
-          <FormLabel color={textColor}>City </FormLabel>
-          <Input placeholder="City" bg={formBgColor} />
+          <FormLabel color={textColor}>City</FormLabel>
+          <Input
+            placeholder="City"
+            bg={formBgColor}
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+          />
         </FormControl>
         <FormControl id="country" isRequired>
           <FormLabel color={textColor}>Country</FormLabel>
@@ -97,11 +181,21 @@ const CheckoutPage: React.FC = () => {
         </FormControl>
         <FormControl isRequired>
           <FormLabel color={textColor}>Comments</FormLabel>
-          <Input placeholder="Comments" bg={formBgColor} />
+          <Input
+            placeholder="Comments"
+            bg={formBgColor}
+            value={comments}
+            onChange={(e) => setComments(e.target.value)}
+          />
         </FormControl>
         <FormControl id="payment-method" isRequired>
           <FormLabel color={textColor}>Payment Method</FormLabel>
-          <Select placeholder="Select payment method" bg={formBgColor}>
+          <Select
+            placeholder="Select payment method"
+            bg={formBgColor}
+            value={paymentMethod}
+            onChange={(e) => setPaymentMethod(e.target.value)}
+          >
             <option value="cash">Cash on Delivery</option>
             <option value="credit-card">Credit Card</option>
           </Select>

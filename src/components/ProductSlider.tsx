@@ -8,7 +8,7 @@ import {
 } from "pure-react-carousel";
 import "pure-react-carousel/dist/react-carousel.es.css"; // Import carousel styles
 import products from "./product"; // Update the path according to your project structure
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa"; // Import arrow icons
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; // Import new arrow icons
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import styles from "./ProductSlider.module.css"; // Import the CSS module
 
@@ -23,7 +23,7 @@ interface Product {
   id: string;
   name: string;
   description: string;
-  image: string;
+  images: string[]; // Changed from image to images
   variants: Variant[];
   color: string[];
   theme: string;
@@ -84,76 +84,61 @@ const ProductSlider: React.FC = () => {
   };
 
   return (
-    <CarouselProvider
-      naturalSlideWidth={100}
-      naturalSlideHeight={125}
-      totalSlides={products.length}
-      visibleSlides={visibleSlides}
-      infinite
-      isIntrinsicHeight
-    >
-      <Slider>
-        {products.map((product: Product) => {
-          const priceRange = getPriceRange(product.variants);
-          const sizeCount = getSizeCount(product.variants);
+    <div className={styles.sliderWrapper}>
+      <CarouselProvider
+        naturalSlideWidth={100}
+        naturalSlideHeight={125}
+        totalSlides={products.length}
+        visibleSlides={visibleSlides}
+        infinite
+        isIntrinsicHeight
+      >
+        <Slider>
+          {products.map((product: Product) => {
+            const priceRange = getPriceRange(product.variants);
+            const sizeCount = getSizeCount(product.variants);
 
-          return (
-            <Slide
-              index={products.indexOf(product)}
-              key={product.id}
-              className={styles.slide} // Apply CSS module class
-            >
-              <div
-                onClick={() => handleSlideClick(product.id)} // Add onClick handler to the wrapper div
-                className={styles.details} // Apply CSS module class
+            return (
+              <Slide
+                index={products.indexOf(product)}
+                key={product.id}
+                className={styles.slide} // Apply CSS module class
               >
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className={styles.image} // Apply CSS module class
-                />
-                <div>
-                  <h2>{product.name}</h2>
+                <div
+                  onClick={() => handleSlideClick(product.id)} // Add onClick handler to the wrapper div
+                  className={styles.details} // Apply CSS module class
+                >
+                  <img
+                    src={product.images[0]} // Use the first image from the images array
+                    alt={product.name}
+                    className={styles.image} // Apply CSS module class
+                  />
                   <div>
-                    <p>
-                      Price: {priceRange.min} - {priceRange.max} EGP
-                    </p>
-                    <p>
-                      {sizeCount} {sizeCount === 1 ? "size" : "sizes"} available
-                    </p>
+                    <h2>{product.name}</h2>
+                    <div>
+                      <p>
+                        Price: {priceRange.min} - {priceRange.max} EGP
+                      </p>
+                      <p>
+                        {sizeCount} {sizeCount === 1 ? "size" : "sizes"}{" "}
+                        available
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Slide>
-          );
-        })}
-      </Slider>
+              </Slide>
+            );
+          })}
+        </Slider>
 
-      <ButtonBack
-        style={{
-          position: "absolute",
-          left: "10px",
-          top: "50%",
-          transform: "translateY(-50%)",
-          background: "transparent",
-          border: "none",
-        }}
-      >
-        <FaArrowLeft size={24} />
-      </ButtonBack>
-      <ButtonNext
-        style={{
-          position: "absolute",
-          right: "10px",
-          top: "50%",
-          transform: "translateY(-50%)",
-          background: "transparent",
-          border: "none",
-        }}
-      >
-        <FaArrowRight size={24} />
-      </ButtonNext>
-    </CarouselProvider>
+        <ButtonBack className={styles.buttonBack}>
+          <FaChevronLeft size={24} />
+        </ButtonBack>
+        <ButtonNext className={styles.buttonNext}>
+          <FaChevronRight size={24} />
+        </ButtonNext>
+      </CarouselProvider>
+    </div>
   );
 };
 

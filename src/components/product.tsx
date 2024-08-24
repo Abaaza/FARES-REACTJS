@@ -1,19 +1,5 @@
-export interface Variant {
-  id: string;
-  size: string;
-  price: number;
-}
-
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  image: string;
-  variants: Variant[];
-  color: string[]; // Changed to string[] to match the array of colors
-  theme: string;
-  threePiece: string; // Property names with special characters should be quoted
-}
+// src/product.ts
+import { Product } from "./types"; // Ensure correct import path
 
 const products: Product[] = [
   {
@@ -23,8 +9,11 @@ const products: Product[] = [
     color: ["blue", "white"],
     theme: "abstract",
     threePiece: "No",
-    image:
+    images: [
       "https://www.wall-masters.com/wp-content/uploads/2021/10/574-scaled.jpg",
+      "https://www.wall-masters.com/wp-content/uploads/2021/10/574-detail.jpg",
+      "https://www.wall-masters.com/wp-content/uploads/2021/10/574-zoom.jpg",
+    ],
     variants: [
       { id: "574-1", size: "60x40", price: 350 },
       { id: "574-2", size: "90x60", price: 600 },
@@ -40,8 +29,11 @@ const products: Product[] = [
     color: ["brown", "beige"],
     theme: "abstract",
     threePiece: "No",
-    image:
+    images: [
       "https://www.wall-masters.com/wp-content/uploads/2021/10/576-scaled.jpg",
+      "https://www.wall-masters.com/wp-content/uploads/2021/10/576-detail.jpg",
+      "https://www.wall-masters.com/wp-content/uploads/2021/10/576-zoom.jpg",
+    ],
     variants: [
       { id: "576-1", size: "60x40", price: 350 },
       { id: "576-2", size: "90x60", price: 600 },
@@ -57,8 +49,11 @@ const products: Product[] = [
     color: ["blue", "white"],
     theme: "floral",
     threePiece: "No",
-    image:
+    images: [
       "https://www.wall-masters.com/wp-content/uploads/2021/10/493-scaled.jpg",
+      "https://www.wall-masters.com/wp-content/uploads/2021/10/493-detail.jpg",
+      "https://www.wall-masters.com/wp-content/uploads/2021/10/493-zoom.jpg",
+    ],
     variants: [
       { id: "493-1", size: "60x40", price: 350 },
       { id: "493-2", size: "90x60", price: 600 },
@@ -74,8 +69,11 @@ const products: Product[] = [
     color: ["green"],
     theme: "abstract",
     threePiece: "No",
-    image:
+    images: [
       "https://www.wall-masters.com/wp-content/uploads/2021/10/518-scaled.jpg",
+      "https://www.wall-masters.com/wp-content/uploads/2021/10/518-detail.jpg",
+      "https://www.wall-masters.com/wp-content/uploads/2021/10/518-zoom.jpg",
+    ],
     variants: [
       { id: "518-1", size: "60x40", price: 350 },
       { id: "518-2", size: "90x60", price: 600 },

@@ -45,3 +45,14 @@
 body {
   overflow-x: hidden;
 }
+
+/* Global CSS or within a <style> tag */
+video {
+    transition: none !important; /* Remove any transitions */
+  }
+  
+  .no-hover-effect:hover {
+    filter: none !important; /* Ensure no filter effects on hover */
+    opacity: 1 !important; /* Ensure opacity remains unchanged on hover */
+  }
+  

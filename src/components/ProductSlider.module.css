@@ -1,6 +1,14 @@
 /* ProductSlider.module.css */
+
+.sliderWrapper {
+  position: relative;
+  width: 100%; /* Ensure the slider takes full width of its container */
+  overflow: hidden; /* Hide overflow to prevent scrollbars */
+}
+
 .slide {
   padding: 0 4px; /* Decrease the horizontal padding to reduce space between slides */
+  background-color: transparent; /* Remove grey background */
 }
 
 .image {
@@ -10,7 +18,28 @@
 
 .details {
   cursor: pointer; /* Indicate that the slide is clickable */
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 1 2px 4px rgba(0.2, 0.2, 0.2, 0.2);
+  background-color: transparent; /* Ensure background is transparent */
+}
+
+/* Positioning arrows */
+.buttonBack,
+.buttonNext {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.buttonBack {
+  left: 10px; /* Adjust as needed */
+}
+
+.buttonNext {
+  right: 10px; /* Adjust as needed */
 }

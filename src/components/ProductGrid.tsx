@@ -1,3 +1,4 @@
+// src/components/ProductGrid.tsx
 import React, { useMemo, useState } from "react";
 import { Button, Box } from "@chakra-ui/react";
 import ProductCard from "./ProductCard";
@@ -58,8 +59,8 @@ const ProductGrid: React.FC = () => {
             { value: "Yes", label: "3 Pieces" },
           ]}
           onThemeSelect={setSelectedTheme}
-          onColorSelect={setSelectedColors} // Pass the updated state setter
-          onThreePSelect={(option) => setSelectedThreeP(option)}
+          onColorSelect={setSelectedColors}
+          onThreePSelect={setSelectedThreeP}
           onResetFilters={handleResetFilters}
         />
       </Box>
@@ -72,7 +73,7 @@ const ProductGrid: React.FC = () => {
             <ProductCard
               key={product.id}
               name={product.name}
-              image={product.image}
+              image={product.images[0]} // Use the first image or adjust as needed
               priceRange={priceRange}
               sizes={sizes}
               sizeCount={sizes.length}

@@ -9,6 +9,7 @@ import {
   WrapItem,
   Checkbox,
   VStack,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 
@@ -71,7 +72,8 @@ const SortSelector: React.FC<SortSelectorProps> = ({
 
   return (
     <Wrap spacing={2} mb={4} direction={{ base: "column", sm: "row" }}>
-      <WrapItem>
+      {/* Desktop view */}
+      <WrapItem display={{ base: "none", sm: "block" }}>
         <Menu>
           <MenuButton as={Button} rightIcon={<BsChevronDown />}>
             {selectedTheme
@@ -87,7 +89,7 @@ const SortSelector: React.FC<SortSelectorProps> = ({
           </MenuList>
         </Menu>
       </WrapItem>
-      <WrapItem>
+      <WrapItem display={{ base: "none", sm: "block" }}>
         <Menu closeOnSelect={false}>
           <MenuButton as={Button} rightIcon={<BsChevronDown />}>
             {getSelectedColorsLabel()}
@@ -107,7 +109,7 @@ const SortSelector: React.FC<SortSelectorProps> = ({
           </MenuList>
         </Menu>
       </WrapItem>
-      <WrapItem>
+      <WrapItem display={{ base: "none", sm: "block" }}>
         <Menu>
           <MenuButton as={Button} rightIcon={<BsChevronDown />}>
             {selectedThreeP
@@ -124,9 +126,74 @@ const SortSelector: React.FC<SortSelectorProps> = ({
           </MenuList>
         </Menu>
       </WrapItem>
-      <WrapItem>
+      <WrapItem display={{ base: "none", sm: "block" }}>
         <Button onClick={handleResetFilters}>Reset Filters</Button>
       </WrapItem>
+
+      {/* Mobile view */}
+      <SimpleGrid
+        columns={{ base: 2, md: 2 }}
+        spacing={2}
+        display={{ base: "grid", sm: "none" }}
+      >
+        <WrapItem>
+          <Menu>
+            <MenuButton as={Button} rightIcon={<BsChevronDown />}>
+              {selectedTheme
+                ? selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)
+                : "Theme"}
+            </MenuButton>
+            <MenuList>
+              {themes.map((theme) => (
+                <MenuItem key={theme} onClick={() => handleThemeSelect(theme)}>
+                  {theme.charAt(0).toUpperCase() + theme.slice(1)}
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
+        </WrapItem>
+        <WrapItem>
+          <Menu closeOnSelect={false}>
+            <MenuButton as={Button} rightIcon={<BsChevronDown />}>
+              {getSelectedColorsLabel()}
+            </MenuButton>
+            <MenuList>
+              <VStack align="start" spacing={1} p={2}>
+                {colors.map((color) => (
+                  <Checkbox
+                    key={color}
+                    isChecked={selectedColors.includes(color)}
+                    onChange={() => handleColorSelect(color)}
+                  >
+                    {color.charAt(0).toUpperCase() + color.slice(1)}
+                  </Checkbox>
+                ))}
+              </VStack>
+            </MenuList>
+          </Menu>
+        </WrapItem>
+        <WrapItem>
+          <Menu>
+            <MenuButton as={Button} rightIcon={<BsChevronDown />}>
+              {selectedThreeP
+                ? threePOptions.find(
+                    (option) => option.value === selectedThreeP
+                  )?.label || "No of pieces"
+                : "No of pieces"}
+            </MenuButton>
+            <MenuList>
+              {threePOptions.map(({ value, label }) => (
+                <MenuItem key={value} onClick={() => handleThreePSelect(value)}>
+                  {label}
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
+        </WrapItem>
+        <WrapItem>
+          <Button onClick={handleResetFilters}>Reset Filters</Button>
+        </WrapItem>
+      </SimpleGrid>
     </Wrap>
   );
 };

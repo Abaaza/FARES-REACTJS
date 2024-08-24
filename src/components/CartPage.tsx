@@ -14,6 +14,9 @@ import { useCart } from "./CartContext"; // Import the useCart hook
 import { useNavigate } from "react-router-dom";
 import { FaTrash } from "react-icons/fa"; // Import a trash icon for the remove button
 
+const SHIPPING_COST = 70;
+const FREE_SHIPPING_THRESHOLD = 2000;
+
 const CartPage: React.FC = () => {
   const { cart, removeItem, increaseQuantity, decreaseQuantity } = useCart();
   const navigate = useNavigate();
@@ -26,6 +29,11 @@ const CartPage: React.FC = () => {
     (total, item) => total + item.price * item.quantity,
     0
   );
+
+  const shippingCost =
+    totalPrice >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+
+  const grandTotal = totalPrice + shippingCost;
 
   const bgColor = useColorModeValue("gray.50", "gray.800");
   const textColor = useColorModeValue("gray.800", "gray.200");
@@ -53,11 +61,16 @@ const CartPage: React.FC = () => {
             >
               <HStack spacing={4} align="center">
                 <Image
-                  src={item.image}
+                  src={item.image} // Use the image URL from the cart item
                   alt={item.name}
                   boxSize="100px"
                   objectFit="cover"
                   borderRadius="md"
+                  fallbackSrc="path/to/placeholder-image.png" // Fallback image
+                  onError={(e) => {
+                    // Handle image load error
+                    e.currentTarget.src = "path/to/placeholder-image.png";
+                  }}
                 />
                 <VStack align="start" spacing={2} flex="1">
                   <Heading size="md" color={headingColor}>
@@ -95,7 +108,18 @@ const CartPage: React.FC = () => {
             borderRadius="md"
           >
             <Text fontSize="lg" fontWeight="bold" color={headingColor}>
-              Total: {totalPrice} EGP
+              Subtotal: {totalPrice} EGP
+            </Text>
+            <Text fontSize="lg" color={textColor}>
+              Shipping: {shippingCost} EGP
+            </Text>
+            {totalPrice >= FREE_SHIPPING_THRESHOLD && (
+              <Text fontSize="lg" color="green.500">
+                Free Shipping Eligible
+              </Text>
+            )}
+            <Text fontSize="lg" fontWeight="bold" color={headingColor}>
+              Total: {grandTotal} EGP
             </Text>
           </Box>
           <Button colorScheme="teal" onClick={handleCheckout}>
