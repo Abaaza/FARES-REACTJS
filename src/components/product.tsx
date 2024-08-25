@@ -9,11 +9,7 @@ const products: Product[] = [
     color: ["blue", "white"],
     theme: "abstract",
     threePiece: "No",
-    images: [
-      "https://www.wall-masters.com/wp-content/uploads/2021/10/574-scaled.jpg",
-      "https://www.wall-masters.com/wp-content/uploads/2021/10/574-detail.jpg",
-      "https://www.wall-masters.com/wp-content/uploads/2021/10/574-zoom.jpg",
-    ],
+    images: ["https://www.wall-masters.com/574.webp"],
     variants: [
       { id: "574-1", size: "60x40", price: 350 },
       { id: "574-2", size: "90x60", price: 600 },
@@ -29,11 +25,7 @@ const products: Product[] = [
     color: ["brown", "beige"],
     theme: "abstract",
     threePiece: "No",
-    images: [
-      "https://www.wall-masters.com/wp-content/uploads/2021/10/576-scaled.jpg",
-      "https://www.wall-masters.com/wp-content/uploads/2021/10/576-detail.jpg",
-      "https://www.wall-masters.com/wp-content/uploads/2021/10/576-zoom.jpg",
-    ],
+    images: ["https://www.wall-masters.com/576.webp"],
     variants: [
       { id: "576-1", size: "60x40", price: 350 },
       { id: "576-2", size: "90x60", price: 600 },
@@ -49,11 +41,7 @@ const products: Product[] = [
     color: ["blue", "white"],
     theme: "floral",
     threePiece: "No",
-    images: [
-      "https://www.wall-masters.com/wp-content/uploads/2021/10/493-scaled.jpg",
-      "https://www.wall-masters.com/wp-content/uploads/2021/10/493-detail.jpg",
-      "https://www.wall-masters.com/wp-content/uploads/2021/10/493-zoom.jpg",
-    ],
+    images: ["https://www.wall-masters.com/493.webp"],
     variants: [
       { id: "493-1", size: "60x40", price: 350 },
       { id: "493-2", size: "90x60", price: 600 },
@@ -69,11 +57,7 @@ const products: Product[] = [
     color: ["green"],
     theme: "abstract",
     threePiece: "No",
-    images: [
-      "https://www.wall-masters.com/wp-content/uploads/2021/10/518-scaled.jpg",
-      "https://www.wall-masters.com/wp-content/uploads/2021/10/518-detail.jpg",
-      "https://www.wall-masters.com/wp-content/uploads/2021/10/518-zoom.jpg",
-    ],
+    images: ["https://www.wall-masters.com/518.webp"],
     variants: [
       { id: "518-1", size: "60x40", price: 350 },
       { id: "518-2", size: "90x60", price: 600 },

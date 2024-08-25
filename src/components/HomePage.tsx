@@ -10,19 +10,66 @@ import {
   VStack,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import emailjs from "emailjs-com";
 import { useNavigate } from "react-router-dom";
-import video from "../assets/1.mp4";
-import video2 from "../assets/28.mp4";
 import ProductSlider from "./ProductSlider";
 import Footer from "../components/Footer";
-import "./HomePage.css"; // Import custom CSS
+import AutoSlideShow from "./AutoSlideShow";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const videoSrc = useBreakpointValue({
-    base: video, // Mobile view
-    md: video2, // PC view
+
+  // Generate arrays of image URLs for mobile and PC versions
+  const mobileImages = Array.from(
+    { length: 21 },
+    (_, i) => `https://www.wall-masters.com/images/videomobile${i + 1}.webp`
+  );
+
+  const pcImages = Array.from(
+    { length: 22 },
+    (_, i) => `https://www.wall-masters.com/images/videopc${i + 1}.webp`
+  );
+
+  // Determine which images to display based on breakpoint
+  const imagesToShow = useBreakpointValue({
+    base: mobileImages, // Mobile images
+    md: pcImages, // PC images
   });
+
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [comment, setComment] = React.useState("");
+
+  const handleSubmit = () => {
+    if (!name || !email || !comment) {
+      alert("Please fill out all fields.");
+      return;
+    }
+
+    // Prepare data for EmailJS
+    const templateParams = {
+      user_name: name,
+      user_email: email,
+      user_comment: comment,
+    };
+
+    // Send the email using EmailJS
+    emailjs
+      .send(
+        "service_4hrebk8", // Service ID
+        "template_1zxs0jz", // Template ID
+        templateParams,
+        "1mIy5IpEpJPFCN01g" // User ID
+      )
+      .then((response) => {
+        console.log("SUCCESS!", response.status, response.text);
+        alert("Your message has been sent successfully!");
+      })
+      .catch((error) => {
+        console.error("FAILED...", error);
+        alert("There was an error sending your message. Please try again.");
+      });
+  };
 
   const goToProductGrid = () => {
     navigate("/product-grid");
@@ -30,54 +77,58 @@ const HomePage: React.FC = () => {
 
   return (
     <Box p={5}>
+      {/* AutoSlideShow Component for images */}
       <Box onClick={goToProductGrid} cursor="pointer">
-        <video
-          src={videoSrc}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="homepage-video" // Apply custom CSS class
-          style={{ width: "100%", height: "auto" }}
-        >
-          Your browser does not support the video tag.
-        </video>
+        {imagesToShow && <AutoSlideShow images={imagesToShow} />}
       </Box>
 
-      {/* Center the heading */}
-      <Box textAlign="center">
-        <Heading as="h2" size="lg" mb={4} textAlign="center" padding={25}>
+      <Box textAlign="center" mt={10}>
+        <Heading as="h2" size="lg" mb={4}>
           Top Sellers
         </Heading>
       </Box>
 
       <ProductSlider />
 
-      {/* Contact Us Form */}
       <Box mt={10} width="90%" mx="auto">
         <Heading as="h2" size="lg" mb={4} textAlign="center">
           Contact Us
         </Heading>
         <VStack spacing={4} align="stretch">
-          <Box>
-            <FormControl id="name">
-              <FormLabel>Name</FormLabel>
-              <Input placeholder="Your Name" />
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl id="email">
-              <FormLabel>Email</FormLabel>
-              <Input type="email" placeholder="Your Email" />
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl id="comment">
-              <FormLabel>Comment</FormLabel>
-              <Textarea placeholder="Your Comment" />
-            </FormControl>
-          </Box>
-          <Button colorScheme="teal" size="lg" alignSelf="center">
+          <FormControl id="name">
+            <FormLabel>Name</FormLabel>
+            <Input
+              placeholder="Your Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </FormControl>
+
+          <FormControl id="email">
+            <FormLabel>Email</FormLabel>
+            <Input
+              type="email"
+              placeholder="Your Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </FormControl>
+
+          <FormControl id="comment">
+            <FormLabel>Comment</FormLabel>
+            <Textarea
+              placeholder="Your Comment"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+          </FormControl>
+
+          <Button
+            colorScheme="teal"
+            size="lg"
+            alignSelf="center"
+            onClick={handleSubmit}
+          >
             Submit
           </Button>
         </VStack>

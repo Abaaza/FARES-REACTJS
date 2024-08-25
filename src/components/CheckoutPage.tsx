@@ -14,6 +14,7 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useCart } from "./CartContext"; // Import the useCart hook
+import emailjs from "emailjs-com";
 
 const SHIPPING_COST = 70;
 const FREE_SHIPPING_THRESHOLD = 2000;
@@ -35,7 +36,7 @@ const CheckoutPage: React.FC = () => {
   const [city, setCity] = useState("");
   const [comments, setComments] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
-
+  const [email, setEmail] = useState("");
   const bgColor = useColorModeValue("gray.50", "gray.800");
   const textColor = useColorModeValue("gray.800", "gray.200");
   const formBgColor = useColorModeValue("white", "gray.700");
@@ -43,10 +44,15 @@ const CheckoutPage: React.FC = () => {
   const headingColor = useColorModeValue("gray.800", "gray.100");
 
   const handlePlaceOrder = () => {
+    // Generate a unique order number
+    const orderNumber = `Order #${Math.floor(Math.random() * 1000000)}`;
+
     const order = {
+      orderNumber, // Add the order number to the order object
       customer: {
         name,
         phone,
+        email,
         address1,
         address2,
         city,
@@ -59,28 +65,56 @@ const CheckoutPage: React.FC = () => {
       grandTotal,
     };
 
-    // Example: Log the order to the console (you can replace this with an API call)
-    console.log("Order Details:", order);
+    // Prepare email content
+    const emailContent = `
+      Order Number: ${orderNumber} 
+      Name: ${name}
+      Phone: ${phone}
+      Email: ${email}
+      Address 1: ${address1}
+      Address 2: ${address2}
+      City: ${city}
+      Comments: ${comments}
+      Payment Method: ${paymentMethod}
+      
+      Cart Items:
+      ${cart
+        .map(
+          (item) => `
+          ${item.name}
+          Size: ${item.size}
+          Price: ${item.price} EGP
+          Quantity: ${item.quantity}
+      `
+        )
+        .join("")}
+      Total Amount:
+      Subtotal: ${total} EGP
+      Shipping: ${shippingCost} EGP
+      Total: ${grandTotal} EGP
+    `;
 
-    // Example: Send the order data to an API endpoint
-    // fetch('/api/place-order', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(order),
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //   console.log('Success:', data);
-    //   alert('Order placed successfully!');
-    // })
-    // .catch((error) => {
-    //   console.error('Error:', error);
-    //   alert('There was an error placing your order. Please try again.');
-    // });
-
-    alert("Order placed successfully!");
+    // Send email using EmailJS
+    emailjs
+      .send(
+        "service_4hrebk8", // Service ID
+        "template_mkn1fxf", // Template ID
+        {
+          message: emailContent,
+          to_email: email,
+          user_name: name,
+          order_number: orderNumber, // Pass the order number to the template
+        },
+        "1mIy5IpEpJPFCN01g" // User ID
+      )
+      .then((response) => {
+        console.log("Success:", response);
+        alert("Order placed successfully!");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("There was an error placing your order. Please try again.");
+      });
   };
 
   return (
@@ -117,7 +151,6 @@ const CheckoutPage: React.FC = () => {
             </HStack>
           </Box>
         ))}
-
         <Box mt={4}>
           <Heading size="m" color={headingColor}>
             Subtotal: {total} EGP
@@ -129,7 +162,6 @@ const CheckoutPage: React.FC = () => {
             Total: {grandTotal} EGP
           </Heading>
         </Box>
-
         <FormControl isRequired>
           <FormLabel color={textColor}>Name</FormLabel>
           <Input
@@ -146,6 +178,16 @@ const CheckoutPage: React.FC = () => {
             bg={formBgColor}
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+          />
+        </FormControl>{" "}
+        {/* This closing tag was missing */}
+        <FormControl isRequired>
+          <FormLabel color={textColor}>Email</FormLabel>
+          <Input
+            placeholder="Email"
+            bg={formBgColor}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </FormControl>
         <FormControl isRequired>
@@ -179,7 +221,7 @@ const CheckoutPage: React.FC = () => {
           <FormLabel color={textColor}>Country</FormLabel>
           <Input value="Egypt" isReadOnly bg={formBgColor} />
         </FormControl>
-        <FormControl isRequired>
+        <FormControl>
           <FormLabel color={textColor}>Comments</FormLabel>
           <Input
             placeholder="Comments"
@@ -197,10 +239,8 @@ const CheckoutPage: React.FC = () => {
             onChange={(e) => setPaymentMethod(e.target.value)}
           >
             <option value="cash">Cash on Delivery</option>
-            <option value="credit-card">Credit Card</option>
           </Select>
         </FormControl>
-
         <Button colorScheme="teal" onClick={handlePlaceOrder}>
           Place Order
         </Button>

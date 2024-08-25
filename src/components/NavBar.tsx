@@ -20,6 +20,7 @@ import {
   Button,
   useBreakpointValue,
   useDisclosure,
+  Spacer,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
@@ -36,16 +37,17 @@ const NavBar: React.FC = () => {
 
   const handleLogoClick = () => {
     navigate("/");
+    if (isMobile && isOpen) onClose(); // Close the menu if on mobile and open
   };
 
   const handleCartClick = () => {
     navigate("/cart");
-    if (isMobile) onClose(); // Close the menu on mobile view after navigating to the cart page
+    if (isMobile && isOpen) onClose(); // Close the menu if on mobile and open
   };
 
   const handleLinkClick = (path: string) => {
     navigate(path);
-    if (isMobile) onClose(); // Close the menu on mobile view after navigating to a new page
+    if (isMobile && isOpen) onClose(); // Close the menu if on mobile and open
   };
 
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
@@ -122,7 +124,7 @@ const NavBar: React.FC = () => {
               onClick={isOpen ? onClose : onOpen}
               variant="ghost"
               colorScheme="transparent"
-              ml="-2" // Move hamburger icon to the left
+              ml="0" // Move hamburger icon to the left
             />
             <Image
               src={logo}
@@ -143,7 +145,6 @@ const NavBar: React.FC = () => {
                     h={5}
                     cursor="pointer"
                     color={color}
-                    mr="-1"
                   />
                   {totalItems > 0 && (
                     <Badge
@@ -178,12 +179,16 @@ const NavBar: React.FC = () => {
               onClick={handleLogoClick}
               ml="5" // Move logo to the left
             />
-            <HStack spacing={8} ml={700}>
-              {" "}
-              {/* Center the navigation links */}
+            <Spacer />
+            {/* Navigation Links */}
+            <HStack spacing={8} align="center" mr={50}>
               <Link onClick={() => handleLinkClick("/")}>Home</Link>
               <Link onClick={() => handleLinkClick("/product-grid")}>Shop</Link>
+
+              {/* Color Mode Switch */}
               <ColorModeSwitch />
+
+              {/* Cart Icon and Badge */}
               <Popover trigger="hover">
                 <PopoverTrigger>
                   <Link position="relative">
@@ -219,7 +224,6 @@ const NavBar: React.FC = () => {
                 {renderCartContent()}
               </Popover>
             </HStack>
-            <Box mr="2" /> {/* Move cart icon to the right */}
           </Flex>
         )}
       </Flex>
