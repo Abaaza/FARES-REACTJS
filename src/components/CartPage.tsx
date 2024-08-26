@@ -111,7 +111,7 @@ const CartPage: React.FC = () => {
               Subtotal: {totalPrice} EGP
             </Text>
             <Text fontSize="lg" color={textColor}>
-              Shipping: {shippingCost} EGP
+              Shipping: {shippingCost} EGP (6 business days)
             </Text>
             {totalPrice >= FREE_SHIPPING_THRESHOLD && (
               <Text fontSize="lg" color="green.500">

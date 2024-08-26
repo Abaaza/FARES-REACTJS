@@ -3,6 +3,8 @@ import { Variant, Product } from "./types"; // Import the Product type from the 
 import products from "./product";
 import { useMemo } from "react";
 
+
+
 export function getPriceRange(variants: Variant[]): { min: number; max: number } {
   if (variants.length === 0) {
     return { min: 0, max: 0 };
@@ -45,3 +47,5 @@ export const useProductFilters = () => {
 
   return { colors, threePOptions };
 };
+
+

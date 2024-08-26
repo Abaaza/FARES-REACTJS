@@ -1,0 +1,96 @@
+/* Mobile styles */
+@media (max-width: 768px) {
+    .sliderWrapper {
+      position: s;
+      width: 100%;
+      max-width: 320px; /* Ensure slider does not exceed 360px */
+      overflow: hidden;
+      margin: 0 auto;
+    }
+  
+    .slide {
+      /* Mobile styles */
+@media (max-width: 768px) {
+  .sliderWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 360px; /* Ensure slider does not exceed 360px */
+    overflow: hidden;
+    margin: 0 auto;
+    
+  }
+
+  .slide {
+   
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    flex: 1 0 auto;
+    max-width: 
+    50%; /* Ensure each slide takes up 50% of the container's width */
+  }
+
+  .image {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    padding: 2px;
+  }
+
+  .details {
+    cursor: pointer;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 1 2px 4px rgba(0.2, 0.2, 0.2, 0.2);
+    background-color: transparent;
+    text-align: center;
+   
+    width: 100%;
+  }
+
+
+      background-color: transparent;
+      display: flex;
+      justify-content: center;
+      flex: 1 0 auto;
+      max-width: 50%; /* Ensure each slide takes up 50% of the container's width */
+    }
+  
+    .image {
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+    }
+  
+    .details {
+      cursor: pointer;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 1 2px 4px rgba(0.2, 0.2, 0.2, 0.2);
+      background-color: transparent;
+      text-align: center;
+      padding: 1px;
+      width: 100%;
+    }
+  
+    /* Positioning arrows */
+    .buttonBack,
+    .buttonNext {
+      position: absolute;
+      top: 50%; /* Position arrows vertically in the middle of the slider */
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+      padding: 10px;
+    }
+  
+    .buttonBack {
+      left: 0; /* Position at the left edge of the slider */
+    }
+  
+    .buttonNext {
+      right: 0; /* Position at the right edge of the slider */
+    }
+  }}

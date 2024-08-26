@@ -90,7 +90,7 @@ const CheckoutPage: React.FC = () => {
         .join("")}
       Total Amount:
       Subtotal: ${total} EGP
-      Shipping: ${shippingCost} EGP
+      Shipping: ${shippingCost} EGP 
       Total: ${grandTotal} EGP
     `;
 
@@ -156,7 +156,7 @@ const CheckoutPage: React.FC = () => {
             Subtotal: {total} EGP
           </Heading>
           <Text fontSize="lg" color={textColor}>
-            Shipping: {shippingCost} EGP
+            Shipping: {shippingCost} EGP (6 business days)
           </Text>
           <Heading size="m" color={headingColor}>
             Total: {grandTotal} EGP
