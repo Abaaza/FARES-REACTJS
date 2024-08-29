@@ -21,9 +21,11 @@ import {
   useBreakpointValue,
   useDisclosure,
   Spacer,
+  Select,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 import logo from "../assets/logo.png";
 import ColorModeSwitch from "./ColorModeSwitch";
 import { useCart } from "./CartContext";
@@ -32,6 +34,7 @@ const NavBar: React.FC = () => {
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { cart } = useCart();
+  const { t, i18n } = useTranslation(); // i18n hook for translation
 
   const isMobile = useBreakpointValue({ base: true, md: false });
 
@@ -50,6 +53,12 @@ const NavBar: React.FC = () => {
     if (isMobile && isOpen) onClose(); // Close the menu if on mobile and open
   };
 
+  const handleLanguageChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    i18n.changeLanguage(event.target.value);
+  };
+
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   const totalPrice = cart.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -66,7 +75,7 @@ const NavBar: React.FC = () => {
       <PopoverCloseButton />
       <PopoverBody>
         {cart.length === 0 ? (
-          <Text>Your cart is empty</Text>
+          <Text>{t("cart_empty")}</Text>
         ) : (
           <VStack spacing={2}>
             {cart.map((item, index) => (
@@ -81,16 +90,22 @@ const NavBar: React.FC = () => {
                 />
                 <Box flex="1">
                   <Text>{item.name}</Text>
-                  <Text>Qty: {item.quantity}</Text>
-                  <Text>Price: {item.price} EGP</Text>
+                  <Text>
+                    {t("qty")}: {item.quantity}
+                  </Text>
+                  <Text>
+                    {t("price")}: {item.price} EGP
+                  </Text>
                 </Box>
               </Flex>
             ))}
             <Box textAlign="right" w="full">
-              <Text fontWeight="bold">Total Price: {totalPrice} EGP</Text>
+              <Text fontWeight="bold">
+                {t("total_price")}: {totalPrice} EGP
+              </Text>
             </Box>
             <Button colorScheme="teal" size="sm" onClick={handleCartClick}>
-              View Cart
+              {t("view_cart")}
             </Button>
           </VStack>
         )}
@@ -168,6 +183,16 @@ const NavBar: React.FC = () => {
               </PopoverTrigger>
               {renderCartContent()}
             </Popover>
+            {/* Language Selector */}
+            <Select
+              w="100px"
+              ml={2}
+              onChange={handleLanguageChange}
+              defaultValue={i18n.language}
+            >
+              <option value="en">English</option>
+              <option value="ar">العربية</option>
+            </Select>
           </>
         ) : (
           <Flex w="full" alignItems="center">
@@ -182,8 +207,20 @@ const NavBar: React.FC = () => {
             <Spacer />
             {/* Navigation Links */}
             <HStack spacing={8} align="center" mr={50}>
-              <Link onClick={() => handleLinkClick("/")}>Home</Link>
-              <Link onClick={() => handleLinkClick("/product-grid")}>Shop</Link>
+              <Link onClick={() => handleLinkClick("/")}>{t("home")}</Link>
+              <Link onClick={() => handleLinkClick("/product-grid")}>
+                {t("shop")}
+              </Link>
+
+              {/* Language Selector */}
+              <Select
+                w="100px"
+                onChange={handleLanguageChange}
+                defaultValue={i18n.language}
+              >
+                <option value="en">English</option>
+                <option value="ar">العربية</option>
+              </Select>
 
               {/* Color Mode Switch */}
               <ColorModeSwitch />

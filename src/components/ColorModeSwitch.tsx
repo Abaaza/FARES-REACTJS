@@ -1,7 +1,9 @@
 import { HStack, Switch, Text, useColorMode } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 const ColorModeSwitch = () => {
   const { toggleColorMode, colorMode } = useColorMode();
+  const { t } = useTranslation(); // Use the translation hook
 
   return (
     <HStack>
@@ -9,9 +11,9 @@ const ColorModeSwitch = () => {
         colorScheme="green"
         isChecked={colorMode === "dark"}
         onChange={toggleColorMode}
-      ></Switch>
-      <Text fontSize="14px" padding={"10px"}>
-        Dark Mode
+      />
+      <Text fontSize="14px" padding="10px">
+        {t("darkMode")} {/* Use the translation key */}
       </Text>
     </HStack>
   );

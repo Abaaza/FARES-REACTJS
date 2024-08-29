@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   CarouselProvider,
   Slider,
@@ -13,11 +13,13 @@ import styles from "./MobileProductSlider.module.css";
 import { useNavigate } from "react-router-dom";
 import { Product, Variant } from "./types"; // Import Product and Variant types
 import { Box } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next"; // Import useTranslation
 
 const MobileProductSlider: React.FC = React.memo(() => {
-  const navigate = useNavigate(); // Initialize navigate
+  const [limitedProducts, setLimitedProducts] = useState<Product[]>([]);
+  const navigate = useNavigate();
+  const { t } = useTranslation(); // Initialize useTranslation
 
-  // Use useCallback to memoize getRandomProducts function
   const getRandomProducts = useCallback(
     (products: Product[], count: number): Product[] => {
       const shuffled = products.sort(() => 0.5 - Math.random());
@@ -26,18 +28,29 @@ const MobileProductSlider: React.FC = React.memo(() => {
     []
   );
 
-  const limitedProducts = getRandomProducts(products, 15);
+  useEffect(() => {
+    let sessionProducts = sessionStorage.getItem("limitedProductsMobile");
 
-  // Use useCallback to memoize handleSlideClick function
+    if (sessionProducts) {
+      setLimitedProducts(JSON.parse(sessionProducts));
+    } else {
+      const randomProducts = getRandomProducts(products, 15);
+      sessionStorage.setItem(
+        "limitedProductsMobile",
+        JSON.stringify(randomProducts)
+      );
+      setLimitedProducts(randomProducts);
+    }
+  }, [getRandomProducts]);
+
   const handleSlideClick = useCallback(
     (productId: string) => {
       window.scrollTo({ top: 0, behavior: "smooth" });
-      navigate(`/product/${productId}`); // Use navigate function to redirect
+      navigate(`/product/${productId}`);
     },
     [navigate]
   );
 
-  // Memoize getPriceRange function
   const getPriceRange = useCallback(
     (variants: Variant[]): { min: number; max: number } => {
       if (variants.length === 0) {
@@ -53,7 +66,6 @@ const MobileProductSlider: React.FC = React.memo(() => {
     []
   );
 
-  // Memoize getSizeCount function
   const getSizeCount = useCallback((variants: Variant[]): number => {
     const sizes = variants.map((variant) => variant.size);
     return new Set(sizes).size;
@@ -63,7 +75,7 @@ const MobileProductSlider: React.FC = React.memo(() => {
     <>
       <div className={styles.sliderWrapper}>
         <CarouselProvider
-          naturalSlideWidth={340} // Set to 360px
+          naturalSlideWidth={340} // Set to 340px
           naturalSlideHeight={450} // Adjust to maintain aspect ratio
           totalSlides={limitedProducts.length}
           visibleSlides={2} // Show 2 slides on mobile
@@ -93,13 +105,8 @@ const MobileProductSlider: React.FC = React.memo(() => {
                     <div>
                       <h2>{product.name}</h2>
                       <div>
-                        <p>
-                          Price: {min} - {max} EGP
-                        </p>
-                        <p>
-                          {sizeCount} {sizeCount === 1 ? "size" : "sizes"}{" "}
-                          available
-                        </p>
+                        <p>{t("priceRange", { min, max })}</p>
+                        {sizeCount} {t("sizesAvailable")}
                       </div>
                     </div>
                   </div>

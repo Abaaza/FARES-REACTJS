@@ -12,6 +12,7 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
+import { useTranslation } from "react-i18next"; // Import useTranslation
 
 interface SortSelectorProps {
   themes: string[];
@@ -32,6 +33,7 @@ const SortSelector: React.FC<SortSelectorProps> = ({
   onThreePSelect,
   onResetFilters,
 }) => {
+  const { t } = useTranslation(); // Use the translation hook
   const [selectedTheme, setSelectedTheme] = React.useState<string>("");
   const [selectedColors, setSelectedColors] = React.useState<string[]>([]);
   const [selectedThreeP, setSelectedThreeP] = React.useState<string>("");
@@ -62,12 +64,12 @@ const SortSelector: React.FC<SortSelectorProps> = ({
   };
 
   const getSelectedColorsLabel = () => {
-    if (selectedColors.length === 0) return "Color";
+    if (selectedColors.length === 0) return t("colors");
     if (selectedColors.length === 1)
       return (
         selectedColors[0].charAt(0).toUpperCase() + selectedColors[0].slice(1)
       );
-    return `${selectedColors.length} Colors Selected`;
+    return t("selectedColors", { count: selectedColors.length });
   };
 
   return (
@@ -78,7 +80,7 @@ const SortSelector: React.FC<SortSelectorProps> = ({
           <MenuButton as={Button} rightIcon={<BsChevronDown />}>
             {selectedTheme
               ? selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)
-              : "Theme"}
+              : t("theme")}
           </MenuButton>
           <MenuList>
             {themes.map((theme) => (
@@ -114,8 +116,8 @@ const SortSelector: React.FC<SortSelectorProps> = ({
           <MenuButton as={Button} rightIcon={<BsChevronDown />}>
             {selectedThreeP
               ? threePOptions.find((option) => option.value === selectedThreeP)
-                  ?.label || "No of pieces"
-              : "No of pieces"}
+                  ?.label || t("noOfPieces")
+              : t("noOfPieces")}
           </MenuButton>
           <MenuList>
             {threePOptions.map(({ value, label }) => (
@@ -127,7 +129,7 @@ const SortSelector: React.FC<SortSelectorProps> = ({
         </Menu>
       </WrapItem>
       <WrapItem display={{ base: "none", sm: "block" }}>
-        <Button onClick={handleResetFilters}>Reset Filters</Button>
+        <Button onClick={handleResetFilters}>{t("resetFilters")}</Button>
       </WrapItem>
 
       {/* Mobile view */}
@@ -135,13 +137,14 @@ const SortSelector: React.FC<SortSelectorProps> = ({
         columns={{ base: 2, md: 2 }}
         spacing={2}
         display={{ base: "grid", sm: "none" }}
+        mb={3}
       >
         <WrapItem>
           <Menu>
             <MenuButton as={Button} rightIcon={<BsChevronDown />}>
               {selectedTheme
                 ? selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)
-                : "Theme"}
+                : t("theme")}
             </MenuButton>
             <MenuList>
               {themes.map((theme) => (
@@ -178,8 +181,8 @@ const SortSelector: React.FC<SortSelectorProps> = ({
               {selectedThreeP
                 ? threePOptions.find(
                     (option) => option.value === selectedThreeP
-                  )?.label || "No of pieces"
-                : "No of pieces"}
+                  )?.label || t("noOfPieces")
+                : t("noOfPieces")}
             </MenuButton>
             <MenuList>
               {threePOptions.map(({ value, label }) => (
@@ -191,7 +194,7 @@ const SortSelector: React.FC<SortSelectorProps> = ({
           </Menu>
         </WrapItem>
         <WrapItem>
-          <Button onClick={handleResetFilters}>Reset Filters</Button>
+          <Button onClick={handleResetFilters}>{t("resetFilters")}</Button>
         </WrapItem>
       </SimpleGrid>
     </Wrap>

@@ -13,11 +13,13 @@ import {
 import { useCart } from "./CartContext"; // Import the useCart hook
 import { useNavigate } from "react-router-dom";
 import { FaTrash } from "react-icons/fa"; // Import a trash icon for the remove button
+import { useTranslation } from "react-i18next"; // Import the useTranslation hook
 
 const SHIPPING_COST = 70;
 const FREE_SHIPPING_THRESHOLD = 2000;
 
 const CartPage: React.FC = () => {
+  const { t } = useTranslation(); // Initialize translation hook
   const { cart, removeItem, increaseQuantity, decreaseQuantity } = useCart();
   const navigate = useNavigate();
 
@@ -44,10 +46,10 @@ const CartPage: React.FC = () => {
   return (
     <Box p={5} bg={bgColor} color={textColor}>
       <Heading as="h1" mb={4} color={headingColor}>
-        Your Cart
+        {t("cartPage.title")}
       </Heading>
       {cart.length === 0 ? (
-        <Text>Your cart is empty</Text>
+        <Text>{t("cartPage.emptyMessage")}</Text>
       ) : (
         <VStack spacing={4} align="stretch">
           {cart.map((item) => (
@@ -76,18 +78,24 @@ const CartPage: React.FC = () => {
                   <Heading size="md" color={headingColor}>
                     {item.name}
                   </Heading>
-                  <Text color={textColor}>Size: {item.size}</Text>
-                  <Text color={textColor}>Price: {item.price} EGP</Text>
+                  <Text color={textColor}>
+                    {t("cartPage.sizeLabel")}: {item.size}
+                  </Text>
+                  <Text color={textColor}>
+                    {t("cartPage.priceLabel")}: {item.price} EGP
+                  </Text>
                   <HStack spacing={2}>
                     <Button size="sm" onClick={() => decreaseQuantity(item.id)}>
                       -
                     </Button>
-                    <Text color={textColor}>Qty: {item.quantity}</Text>
+                    <Text color={textColor}>
+                      {t("cartPage.qtyLabel")}: {item.quantity}
+                    </Text>
                     <Button size="sm" onClick={() => increaseQuantity(item.id)}>
                       +
                     </Button>
                     <IconButton
-                      aria-label="Remove item"
+                      aria-label={t("cartPage.removeItem")}
                       icon={<FaTrash />}
                       colorScheme="red"
                       size="sm"
@@ -108,22 +116,22 @@ const CartPage: React.FC = () => {
             borderRadius="md"
           >
             <Text fontSize="lg" fontWeight="bold" color={headingColor}>
-              Subtotal: {totalPrice} EGP
+              {t("cartPage.subtotal", { subtotal: totalPrice })}
             </Text>
             <Text fontSize="lg" color={textColor}>
-              Shipping: {shippingCost} EGP (6 business days)
+              {t("cartPage.shipping", { shipping: shippingCost })}
             </Text>
             {totalPrice >= FREE_SHIPPING_THRESHOLD && (
               <Text fontSize="lg" color="green.500">
-                Free Shipping Eligible
+                {t("cartPage.freeShipping")}
               </Text>
             )}
             <Text fontSize="lg" fontWeight="bold" color={headingColor}>
-              Total: {grandTotal} EGP
+              {t("cartPage.total", { total: grandTotal })}
             </Text>
           </Box>
           <Button colorScheme="teal" onClick={handleCheckout}>
-            Proceed to Checkout
+            {t("cartPage.proceedToCheckout")}
           </Button>
         </VStack>
       )}

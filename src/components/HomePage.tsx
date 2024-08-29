@@ -12,11 +12,13 @@ import {
 } from "@chakra-ui/react";
 import emailjs from "emailjs-com";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // Import useTranslation
 import DesktopProductSlider from "./DesktopProductSlider";
 import MobileProductSlider from "./MobileProductSlider";
 import AutoSlideShow from "./AutoSlideShow";
 
 const HomePage: React.FC = () => {
+  const { t } = useTranslation(); // Initialize useTranslation hook
   const navigate = useNavigate();
 
   // Generate arrays of image URLs for mobile and PC versions
@@ -48,7 +50,7 @@ const HomePage: React.FC = () => {
 
   const handleSubmit = () => {
     if (!name || !email || !comment) {
-      alert("Please fill out all fields.");
+      alert(t("formAlert"));
       return;
     }
 
@@ -69,11 +71,11 @@ const HomePage: React.FC = () => {
       )
       .then((response) => {
         console.log("SUCCESS!", response.status, response.text);
-        alert("Your message has been sent successfully!");
+        alert(t("successMessage"));
       })
       .catch((error) => {
         console.error("FAILED...", error);
-        alert("There was an error sending your message. Please try again.");
+        alert(t("errorMessage"));
       });
   };
 
@@ -90,7 +92,7 @@ const HomePage: React.FC = () => {
 
       <Box textAlign="center" mt={10}>
         <Heading as="h2" size="lg" mb={4}>
-          Top Sellers
+          {t("topSellers")}
         </Heading>
       </Box>
       <Box textAlign="center" mt={10}>
@@ -99,32 +101,32 @@ const HomePage: React.FC = () => {
       </Box>
       <Box mt={10} width="90%" mx="auto">
         <Heading as="h2" size="lg" mb={4} textAlign="center">
-          Contact Us
+          {t("contactUs")}
         </Heading>
         <VStack spacing={4} align="stretch">
           <FormControl id="name">
-            <FormLabel>Name</FormLabel>
+            <FormLabel>{t("nameLabel")}</FormLabel>
             <Input
-              placeholder="Your Name"
+              placeholder={t("namePlaceholder")}
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </FormControl>
 
           <FormControl id="email">
-            <FormLabel>Email</FormLabel>
+            <FormLabel>{t("emailLabel")}</FormLabel>
             <Input
               type="email"
-              placeholder="Your Email"
+              placeholder={t("emailPlaceholder")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </FormControl>
 
           <FormControl id="comment">
-            <FormLabel>Comment</FormLabel>
+            <FormLabel>{t("commentLabel")}</FormLabel>
             <Textarea
-              placeholder="Your Comment"
+              placeholder={t("commentPlaceholder")}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
             />
@@ -136,7 +138,7 @@ const HomePage: React.FC = () => {
             alignSelf="center"
             onClick={handleSubmit}
           >
-            Submit
+            {t("submitButton")}
           </Button>
         </VStack>
       </Box>

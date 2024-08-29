@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "./CartContext";
+import { useTranslation } from "react-i18next"; // Import useTranslation
 import {
   IconButton,
   Tooltip,
@@ -19,6 +20,7 @@ const FREE_SHIPPING_THRESHOLD = 2000;
 const CartIcon: React.FC = () => {
   const { cart } = useCart();
   const navigate = useNavigate();
+  const { t } = useTranslation(); // Use useTranslation hook
 
   const handleCartClick = () => {
     navigate("/cart");
@@ -31,12 +33,18 @@ const CartIcon: React.FC = () => {
   return (
     <Box position="relative" display="inline-block">
       <Tooltip
-        label={`Cart (${cart.length}) - Shipping: ${shippingCost} EGP`}
-        aria-label="Cart"
+        label={t("cart_tooltip", {
+          count: cart.length,
+          shipping: shippingCost,
+        })}
+        aria-label={t("cart_tooltip", {
+          count: cart.length,
+          shipping: shippingCost,
+        })}
       >
         <IconButton
           icon={<FaShoppingCart />}
-          aria-label="Cart"
+          aria-label={t("cart")}
           variant="outline"
           colorScheme="teal"
           onClick={handleCartClick}
@@ -78,13 +86,13 @@ const CartIcon: React.FC = () => {
           />
         </MenuButton>
         <MenuList>
-          <MenuItem onClick={handleCartClick}>View Cart</MenuItem>
+          <MenuItem onClick={handleCartClick}>{t("view_cart")}</MenuItem>
           <MenuItem>
-            <Text fontWeight="bold">Shipping:</Text>
+            <Text fontWeight="bold">{t("shipping")}:</Text>
             <Text>{shippingCost} EGP</Text>
           </MenuItem>
           <MenuItem>
-            <Text fontWeight="bold">Total:</Text>
+            <Text fontWeight="bold">{t("total")}:</Text>
             <Text>{grandTotal} EGP</Text>
           </MenuItem>
           {/* Add more menu items as needed */}

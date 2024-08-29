@@ -15,11 +15,13 @@ import {
 } from "@chakra-ui/react";
 import { useCart } from "./CartContext"; // Import the useCart hook
 import emailjs from "emailjs-com";
+import { useTranslation } from "react-i18next";
 
 const SHIPPING_COST = 70;
 const FREE_SHIPPING_THRESHOLD = 2000;
 
 const CheckoutPage: React.FC = () => {
+  const { t } = useTranslation(); // Use the translation hook
   const { cart } = useCart();
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -48,7 +50,7 @@ const CheckoutPage: React.FC = () => {
     const orderNumber = `Order #${Math.floor(Math.random() * 1000000)}`;
 
     const order = {
-      orderNumber, // Add the order number to the order object
+      orderNumber,
       customer: {
         name,
         phone,
@@ -103,24 +105,24 @@ const CheckoutPage: React.FC = () => {
           message: emailContent,
           to_email: email,
           user_name: name,
-          order_number: orderNumber, // Pass the order number to the template
+          order_number: orderNumber,
         },
         "1mIy5IpEpJPFCN01g" // User ID
       )
       .then((response) => {
         console.log("Success:", response);
-        alert("Order placed successfully!");
+        alert(t("orderConfirmation"));
       })
       .catch((error) => {
         console.error("Error:", error);
-        alert("There was an error placing your order. Please try again.");
+        alert(t("orderError"));
       });
   };
 
   return (
     <Box p={5} bg={bgColor} color={textColor}>
       <Heading as="h1" mb={4} color={headingColor}>
-        Checkout
+        {t("checkout")}
       </Heading>
       <VStack spacing={4} align="stretch">
         {cart.map((item) => (
@@ -145,7 +147,9 @@ const CheckoutPage: React.FC = () => {
                   {item.name}
                 </Heading>
                 <Text color={textColor}>Size: {item.size}</Text>
-                <Text color={textColor}>Price: {item.price} EGP</Text>
+                <Text color={textColor}>
+                  {t("price")}: {item.price} EGP
+                </Text>
                 <Text color={textColor}>Quantity: {item.quantity}</Text>
               </VStack>
             </HStack>
@@ -153,96 +157,95 @@ const CheckoutPage: React.FC = () => {
         ))}
         <Box mt={4}>
           <Heading size="m" color={headingColor}>
-            Subtotal: {total} EGP
+            {t("subtotal")}: {total} EGP
           </Heading>
           <Text fontSize="lg" color={textColor}>
-            Shipping: {shippingCost} EGP (6 business days)
+            {t("shipping")}: {shippingCost} EGP (6 business days)
           </Text>
           <Heading size="m" color={headingColor}>
-            Total: {grandTotal} EGP
+            {t("total")}: {grandTotal} EGP
           </Heading>
         </Box>
         <FormControl isRequired>
-          <FormLabel color={textColor}>Name</FormLabel>
+          <FormLabel color={textColor}>{t("name")}</FormLabel>
           <Input
-            placeholder="Your Name"
+            placeholder={t("name")}
             bg={formBgColor}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </FormControl>
         <FormControl isRequired>
-          <FormLabel color={textColor}>Phone Number</FormLabel>
+          <FormLabel color={textColor}>{t("phone")}</FormLabel>
           <Input
-            placeholder="Phone Number"
+            placeholder={t("phone")}
             bg={formBgColor}
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
-        </FormControl>{" "}
-        {/* This closing tag was missing */}
+        </FormControl>
         <FormControl isRequired>
-          <FormLabel color={textColor}>Email</FormLabel>
+          <FormLabel color={textColor}>{t("email")}</FormLabel>
           <Input
-            placeholder="Email"
+            placeholder={t("email")}
             bg={formBgColor}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </FormControl>
         <FormControl isRequired>
-          <FormLabel color={textColor}>Address 1</FormLabel>
+          <FormLabel color={textColor}>{t("address1")}</FormLabel>
           <Input
-            placeholder="Address 1"
+            placeholder={t("address1")}
             bg={formBgColor}
             value={address1}
             onChange={(e) => setAddress1(e.target.value)}
           />
         </FormControl>
         <FormControl isRequired>
-          <FormLabel color={textColor}>Address 2</FormLabel>
+          <FormLabel color={textColor}>{t("address2")}</FormLabel>
           <Input
-            placeholder="Address 2"
+            placeholder={t("address2")}
             bg={formBgColor}
             value={address2}
             onChange={(e) => setAddress2(e.target.value)}
           />
         </FormControl>
         <FormControl isRequired>
-          <FormLabel color={textColor}>City</FormLabel>
+          <FormLabel color={textColor}>{t("city")}</FormLabel>
           <Input
-            placeholder="City"
+            placeholder={t("city")}
             bg={formBgColor}
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
         </FormControl>
         <FormControl id="country" isRequired>
-          <FormLabel color={textColor}>Country</FormLabel>
+          <FormLabel color={textColor}>{t("country")}</FormLabel>
           <Input value="Egypt" isReadOnly bg={formBgColor} />
         </FormControl>
         <FormControl>
-          <FormLabel color={textColor}>Comments</FormLabel>
+          <FormLabel color={textColor}>{t("comments")}</FormLabel>
           <Input
-            placeholder="Comments"
+            placeholder={t("comments")}
             bg={formBgColor}
             value={comments}
             onChange={(e) => setComments(e.target.value)}
           />
         </FormControl>
         <FormControl id="payment-method" isRequired>
-          <FormLabel color={textColor}>Payment Method</FormLabel>
+          <FormLabel color={textColor}>{t("paymentMethod")}</FormLabel>
           <Select
-            placeholder="Select payment method"
+            placeholder={t("paymentMethod")}
             bg={formBgColor}
             value={paymentMethod}
             onChange={(e) => setPaymentMethod(e.target.value)}
           >
-            <option value="cash">Cash on Delivery</option>
+            <option value="cash">{t("cashOnDelivery")}</option>
           </Select>
         </FormControl>
         <Button colorScheme="teal" onClick={handlePlaceOrder}>
-          Place Order
+          {t("placeOrder")}
         </Button>
       </VStack>
     </Box>

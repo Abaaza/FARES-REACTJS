@@ -11,6 +11,7 @@ import products from "./product";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import styles from "./DesktopProductSlider.module.css";
+import { useTranslation } from "react-i18next";
 
 interface Variant {
   id: string;
@@ -57,10 +58,10 @@ const getRandomProducts = (products: Product[], count: number): Product[] => {
 };
 
 const DesktopProductSlider: React.FC = React.memo(() => {
+  const [limitedProducts, setLimitedProducts] = useState<Product[]>([]);
   const [visibleSlides, setVisibleSlides] = useState<number>(4);
   const navigate = useNavigate();
-
-  const limitedProducts = getRandomProducts(products, 20);
+  const { t } = useTranslation();
 
   const updateVisibleSlides = useCallback(() => {
     const isMobile = window.innerWidth < 768;
@@ -68,6 +69,16 @@ const DesktopProductSlider: React.FC = React.memo(() => {
   }, []);
 
   useEffect(() => {
+    let sessionProducts = sessionStorage.getItem("limitedProducts");
+
+    if (sessionProducts) {
+      setLimitedProducts(JSON.parse(sessionProducts));
+    } else {
+      const randomProducts = getRandomProducts(products, 20);
+      sessionStorage.setItem("limitedProducts", JSON.stringify(randomProducts));
+      setLimitedProducts(randomProducts);
+    }
+
     updateVisibleSlides();
     window.addEventListener("resize", updateVisibleSlides);
 
@@ -95,16 +106,12 @@ const DesktopProductSlider: React.FC = React.memo(() => {
         isIntrinsicHeight
       >
         <Slider>
-          {limitedProducts.map((product: Product) => {
+          {limitedProducts.map((product: Product, index: number) => {
             const priceRange = getPriceRange(product.variants);
             const sizeCount = getSizeCount(product.variants);
 
             return (
-              <Slide
-                index={limitedProducts.indexOf(product)}
-                key={product.id}
-                className={styles.slide}
-              >
+              <Slide index={index} key={product.id} className={styles.slide}>
                 <div
                   onClick={() => handleSlideClick(product.id)}
                   className={styles.details}
@@ -118,12 +125,12 @@ const DesktopProductSlider: React.FC = React.memo(() => {
                     <h2>{product.name}</h2>
                     <div>
                       <p>
-                        Price: {priceRange.min} - {priceRange.max} EGP
+                        {t("priceRange", {
+                          min: priceRange.min,
+                          max: priceRange.max,
+                        })}
                       </p>
-                      <p>
-                        {sizeCount} {sizeCount === 1 ? "size" : "sizes"}{" "}
-                        available
-                      </p>
+                      {sizeCount} {t("sizesAvailable")}
                     </div>
                   </div>
                 </div>

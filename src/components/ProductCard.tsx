@@ -1,7 +1,5 @@
-// ProductCard.tsx
-
 import React from "react";
-import { getUniqueSizeCount } from "./productUtils";
+import { useTranslation } from "react-i18next";
 
 interface ProductCardProps {
   name: string;
@@ -20,8 +18,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
   onClick,
   sizeCount,
 }) => {
+  const { t } = useTranslation(); // Get the translation function
+
   return (
-    <div onClick={onClick}>
+    <div
+      onClick={onClick}
+      style={{
+        cursor: "pointer", // Apply the cursor pointer style
+      }}
+    >
       <img
         src={image}
         alt={name}
@@ -30,9 +35,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <div>
         <h3>{name}</h3>
         <p>
-          Price: {priceRange.min} - {priceRange.max} EGP
+          {t("priceLabel")}: {priceRange.min} - {priceRange.max} {t("currency")}
         </p>
-        <p>{sizeCount} sizes available</p>
+        <p>
+          {sizeCount} {t("sizesAvailable")}
+        </p>
       </div>
     </div>
   );

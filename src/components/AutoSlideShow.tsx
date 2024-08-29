@@ -12,7 +12,7 @@ const AutoSlideShow: React.FC<AutoSlideShowProps> = ({ images }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 2000);
+    }, 800);
 
     // Clean up interval on component unmount
     return () => clearInterval(interval);
