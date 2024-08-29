@@ -17,6 +17,40 @@ const ProductGrid: React.FC = () => {
 
   const { colors, threePOptions } = useProductFilters();
   const navigate = useNavigate();
+const location = useLocation();
+
+  useEffect(() => {
+    // Extract query parameters from the URL
+    const params = new URLSearchParams(location.search);
+    setSelectedTheme(params.get("theme") || "");
+    setSelectedColors(params.getAll("color"));
+    setSelectedThreeP(params.get("threeP") || "");
+    const page = Number(params.get("page")) || 1;
+    setCurrentPage(page);
+
+    // Shuffle products or retrieve from session storage
+    const storedProducts = sessionStorage.getItem("shuffledProducts");
+
+    if (storedProducts) {
+      setShuffledProducts(JSON.parse(storedProducts));
+    } else {
+      const shuffled = shuffleArray([...products]);
+      sessionStorage.setItem("shuffledProducts", JSON.stringify(shuffled));
+      setShuffledProducts(shuffled);
+    }
+  }, [location.search]);
+
+  useEffect(() => {
+    // Update the URL with the selected filters and pagination
+    const queryParams = new URLSearchParams();
+    if (selectedTheme) queryParams.set("theme", selectedTheme);
+    if (selectedColors.length > 0)
+      selectedColors.forEach((color) => queryParams.append("color", color));
+    if (selectedThreeP) queryParams.set("threeP", selectedThreeP);
+    queryParams.set("page", currentPage.toString());
+
+    navigate(`?${queryParams.toString()}`, { replace: true });
+  }, [selectedTheme, selectedColors, selectedThreeP, currentPage, navigate]);
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
@@ -34,8 +68,31 @@ const ProductGrid: React.FC = () => {
     });
   }, [selectedTheme, selectedColors, selectedThreeP]);
 
-  const showMoreItems = () => {
-    setVisibleCount((prevCount) => prevCount + 20);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const paginatedProducts = useMemo(() => {
+    return filteredProducts.slice(startIndex, endIndex);
+  }, [filteredProducts, startIndex, endIndex]);
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   const handleCardClick = (productId: string) => {
@@ -54,10 +111,7 @@ const ProductGrid: React.FC = () => {
         <SortSelector
           themes={Array.from(new Set(products.map((p) => p.theme)))}
           colors={Array.from(new Set(products.flatMap((p) => p.color)))}
-          threePOptions={[
-            { value: "No", label: "1 Piece" },
-            { value: "Yes", label: "3 Pieces" },
-          ]}
+          threePOptions={threePOptions}
           onThemeSelect={setSelectedTheme}
           onColorSelect={setSelectedColors}
           onThreePSelect={setSelectedThreeP}
