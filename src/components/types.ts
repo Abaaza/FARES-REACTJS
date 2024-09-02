@@ -1,8 +1,10 @@
 // src/types.ts
 export interface Variant {
+  
   id: string;
   size: string;
   price: number;
+  displayPrice?: string; // Add this property to match your usage
 }
 
 export interface Product {

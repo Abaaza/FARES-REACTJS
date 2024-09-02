@@ -13,15 +13,22 @@ import {
   HStack,
   Select,
 } from "@chakra-ui/react";
-import { useCart } from "./CartContext"; // Import the useCart hook
+import { useCart } from "./CartContext";
 import emailjs from "emailjs-com";
 import { useTranslation } from "react-i18next";
 
 const SHIPPING_COST = 70;
 const FREE_SHIPPING_THRESHOLD = 2000;
 
+// Utility function to convert numbers to Arabic numerals
+const convertToArabicNumerals = (input: number): string => {
+  return input
+    .toString()
+    .replace(/\d/g, (digit) => "٠١٢٣٤٥٦٧٨٩"[parseInt(digit, 10)]);
+};
+
 const CheckoutPage: React.FC = () => {
-  const { t } = useTranslation(); // Use the translation hook
+  const { t, i18n } = useTranslation();
   const { cart } = useCart();
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -39,14 +46,21 @@ const CheckoutPage: React.FC = () => {
   const [comments, setComments] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [email, setEmail] = useState("");
+
   const bgColor = useColorModeValue("gray.50", "gray.800");
   const textColor = useColorModeValue("gray.800", "gray.200");
   const formBgColor = useColorModeValue("white", "gray.700");
   const boxBgColor = useColorModeValue("gray.100", "gray.900");
   const headingColor = useColorModeValue("gray.800", "gray.100");
 
+  // Function to format numbers based on the language
+  const formatAndConvertNumber = (number: number) => {
+    return i18n.language === "ar"
+      ? convertToArabicNumerals(number)
+      : number.toLocaleString();
+  };
+
   const handlePlaceOrder = () => {
-    // Generate a unique order number
     const orderNumber = `Order #${Math.floor(Math.random() * 1000000)}`;
 
     const order = {
@@ -69,7 +83,7 @@ const CheckoutPage: React.FC = () => {
 
     // Prepare email content
     const emailContent = `
-      Order Number: ${orderNumber} 
+      Order Number: ${orderNumber}
       Name: ${name}
       Phone: ${phone}
       Email: ${email}
@@ -85,15 +99,15 @@ const CheckoutPage: React.FC = () => {
           (item) => `
           ${item.name}
           Size: ${item.size}
-          Price: ${item.price} EGP
-          Quantity: ${item.quantity}
+          Price: ${formatAndConvertNumber(item.price)} ${t("currency")}
+          Quantity: ${formatAndConvertNumber(item.quantity)}
       `
         )
         .join("")}
       Total Amount:
-      Subtotal: ${total} EGP
-      Shipping: ${shippingCost} EGP 
-      Total: ${grandTotal} EGP
+      Subtotal: ${formatAndConvertNumber(total)} ${t("currency")}
+      Shipping: ${formatAndConvertNumber(shippingCost)} ${t("currency")}
+      Total: ${formatAndConvertNumber(grandTotal)} ${t("currency")}
     `;
 
     // Send email using EmailJS
@@ -146,24 +160,30 @@ const CheckoutPage: React.FC = () => {
                 <Heading size="md" color={headingColor}>
                   {item.name}
                 </Heading>
-                <Text color={textColor}>Size: {item.size}</Text>
                 <Text color={textColor}>
-                  {t("price")}: {item.price} EGP
+                  {t("sizeLabel")}: {item.size}
                 </Text>
-                <Text color={textColor}>Quantity: {item.quantity}</Text>
+                <Text color={textColor}>
+                  {t("priceLabel")}: {formatAndConvertNumber(item.price)}{" "}
+                  {t("currency")}
+                </Text>
+                <Text color={textColor}>
+                  {t("qtyLabel")}: {formatAndConvertNumber(item.quantity)}
+                </Text>
               </VStack>
             </HStack>
           </Box>
         ))}
         <Box mt={4}>
           <Heading size="m" color={headingColor}>
-            {t("subtotal")}: {total} EGP
+            {t("subtotal")}: {formatAndConvertNumber(total)} {t("currency")}
           </Heading>
           <Text fontSize="lg" color={textColor}>
-            {t("shipping")}: {shippingCost} EGP (6 business days)
+            {t("shipping")}: {formatAndConvertNumber(shippingCost)}{" "}
+            {t("currency")} (6 {t("businessDays")})
           </Text>
           <Heading size="m" color={headingColor}>
-            {t("total")}: {grandTotal} EGP
+            {t("total")}: {formatAndConvertNumber(grandTotal)} {t("currency")}
           </Heading>
         </Box>
         <FormControl isRequired>
@@ -202,7 +222,7 @@ const CheckoutPage: React.FC = () => {
             onChange={(e) => setAddress1(e.target.value)}
           />
         </FormControl>
-        <FormControl isRequired>
+        <FormControl>
           <FormLabel color={textColor}>{t("address2")}</FormLabel>
           <Input
             placeholder={t("address2")}
@@ -220,9 +240,9 @@ const CheckoutPage: React.FC = () => {
             onChange={(e) => setCity(e.target.value)}
           />
         </FormControl>
-        <FormControl id="country" isRequired>
+        <FormControl isRequired>
           <FormLabel color={textColor}>{t("country")}</FormLabel>
-          <Input value="Egypt" isReadOnly bg={formBgColor} />
+          <Input value={t("Egypt")} isReadOnly bg={formBgColor} />
         </FormControl>
         <FormControl>
           <FormLabel color={textColor}>{t("comments")}</FormLabel>
@@ -233,7 +253,7 @@ const CheckoutPage: React.FC = () => {
             onChange={(e) => setComments(e.target.value)}
           />
         </FormControl>
-        <FormControl id="payment-method" isRequired>
+        <FormControl isRequired>
           <FormLabel color={textColor}>{t("paymentMethod")}</FormLabel>
           <Select
             placeholder={t("paymentMethod")}

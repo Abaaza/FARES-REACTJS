@@ -12,6 +12,18 @@ import AboutUs from "./components/AboutUs";
 import Footer from "./components/Footer";
 import "./app.css";
 import { DirectionProvider } from "../src/assets/DirectionContext"; // Import DirectionProvider
+import { ReactGAImplementation } from "react-ga4";
+import ReactGA from "react-ga";
+
+const TRACKING_ID = "G-Z3HCP2S7R3"; // Replace with your Measurement ID
+ReactGA.initialize(TRACKING_ID);
+
+export const logPageView = () => {
+  ReactGA.send({
+    hitType: "pageview",
+    page: window.location.pathname + window.location.search,
+  });
+};
 
 const App: React.FC = () => {
   useEffect(() => {

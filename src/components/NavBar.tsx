@@ -30,27 +30,40 @@ import logo from "../assets/logo.png";
 import ColorModeSwitch from "./ColorModeSwitch";
 import { useCart } from "./CartContext";
 
+// Helper function to convert numbers to Arabic numerals based on language
+const toArabicNumerals = (number: number, isArabic: boolean): string => {
+  if (!isArabic) return number.toString(); // Return the number as-is for English
+
+  const arabicNumerals = "٠١٢٣٤٥٦٧٨٩";
+  return number
+    .toString()
+    .split("")
+    .map((digit) => arabicNumerals[parseInt(digit, 10)])
+    .join("");
+};
+
 const NavBar: React.FC = () => {
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { cart } = useCart();
-  const { t, i18n } = useTranslation(); // i18n hook for translation
+  const { t, i18n } = useTranslation();
 
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const isArabic = i18n.language === "ar"; // Check if the current language is Arabic
 
   const handleLogoClick = () => {
     navigate("/");
-    if (isMobile && isOpen) onClose(); // Close the menu if on mobile and open
+    if (isMobile && isOpen) onClose();
   };
 
   const handleCartClick = () => {
     navigate("/cart");
-    if (isMobile && isOpen) onClose(); // Close the menu if on mobile and open
+    if (isMobile && isOpen) onClose();
   };
 
   const handleLinkClick = (path: string) => {
     navigate(path);
-    if (isMobile && isOpen) onClose(); // Close the menu if on mobile and open
+    if (isMobile && isOpen) onClose();
   };
 
   const handleLanguageChange = (
@@ -67,7 +80,7 @@ const NavBar: React.FC = () => {
 
   const bg = useColorModeValue("gray.800", "gray.800");
   const color = useColorModeValue("white", "white");
-  const badgeTextColor = useColorModeValue("gray.800", "gray.800"); // Set badge text color to match navbar background
+  const badgeTextColor = useColorModeValue("gray.800", "gray.800");
 
   const renderCartContent = () => (
     <PopoverContent bg={bg} color={color}>
@@ -91,17 +104,19 @@ const NavBar: React.FC = () => {
                 <Box flex="1">
                   <Text>{item.name}</Text>
                   <Text>
-                    {t("qty")}: {item.quantity}
+                    {t("qty")}: {toArabicNumerals(item.quantity, isArabic)}
                   </Text>
                   <Text>
-                    {t("price")}: {item.price} EGP
+                    {t("price")}: {toArabicNumerals(item.price, isArabic)}{" "}
+                    {t("currency")}
                   </Text>
                 </Box>
               </Flex>
             ))}
             <Box textAlign="right" w="full">
               <Text fontWeight="bold">
-                {t("total_price")}: {totalPrice} EGP
+                {t("total_price")}: {toArabicNumerals(totalPrice, isArabic)}{" "}
+                {t("currency")}
               </Text>
             </Box>
             <Button colorScheme="teal" size="sm" onClick={handleCartClick}>
@@ -139,21 +154,22 @@ const NavBar: React.FC = () => {
               onClick={isOpen ? onClose : onOpen}
               variant="ghost"
               colorScheme="transparent"
-              ml="0" // Move hamburger icon to the left
+              ml="0"
             />
-            <Image
-              src={logo}
-              w="200px"
-              h="auto"
-              mx="auto" // Center the logo
-              cursor="pointer"
-              onClick={handleLogoClick}
-            />
+            <VStack spacing={2} align="center" w="full">
+              <Image
+                src={logo}
+                w="200px"
+                h="auto"
+                mx="auto"
+                cursor="pointer"
+                onClick={handleLogoClick}
+              />
+            </VStack>
+            {/* Cart Icon */}
             <Popover trigger="hover">
               <PopoverTrigger>
                 <Link position="relative" mr="2">
-                  {" "}
-                  {/* Move cart icon to the right */}
                   <Icon
                     as={FaShoppingCart}
                     w={5}
@@ -176,23 +192,13 @@ const NavBar: React.FC = () => {
                       alignItems="center"
                       bg="transparent"
                     >
-                      {totalItems}
+                      {toArabicNumerals(totalItems, isArabic)}
                     </Badge>
                   )}
                 </Link>
               </PopoverTrigger>
               {renderCartContent()}
             </Popover>
-            {/* Language Selector */}
-            <Select
-              w="100px"
-              ml={2}
-              onChange={handleLanguageChange}
-              defaultValue={i18n.language}
-            >
-              <option value="en">English</option>
-              <option value="ar">العربية</option>
-            </Select>
           </>
         ) : (
           <Flex w="full" alignItems="center">
@@ -202,7 +208,7 @@ const NavBar: React.FC = () => {
               h="auto"
               cursor="pointer"
               onClick={handleLogoClick}
-              ml="5" // Move logo to the left
+              ml="5"
             />
             <Spacer />
             {/* Navigation Links */}
@@ -211,12 +217,14 @@ const NavBar: React.FC = () => {
               <Link onClick={() => handleLinkClick("/product-grid")}>
                 {t("shop")}
               </Link>
-
               {/* Language Selector */}
               <Select
                 w="100px"
                 onChange={handleLanguageChange}
                 defaultValue={i18n.language}
+                bg={useColorModeValue("gray.700", "gray.700")}
+                color={useColorModeValue("gray.500", "white")}
+                borderColor={useColorModeValue("gray.600", "gray.600")}
               >
                 <option value="en">English</option>
                 <option value="ar">العربية</option>
@@ -224,7 +232,6 @@ const NavBar: React.FC = () => {
 
               {/* Color Mode Switch */}
               <ColorModeSwitch />
-
               {/* Cart Icon and Badge */}
               <Popover trigger="hover">
                 <PopoverTrigger>
@@ -253,7 +260,7 @@ const NavBar: React.FC = () => {
                         justifyContent="center"
                         bg="transparent"
                       >
-                        {totalItems}
+                        {toArabicNumerals(totalItems, isArabic)}
                       </Badge>
                     )}
                   </Link>
@@ -274,9 +281,25 @@ const NavBar: React.FC = () => {
           borderRadius="md"
           boxShadow="md"
         >
-          <Link onClick={() => handleLinkClick("/")}>Home</Link>
-          <Link onClick={() => handleLinkClick("/product-grid")}>Shop</Link>
+          <Link onClick={() => handleLinkClick("/")}>{t("home")}</Link>
+          <Link onClick={() => handleLinkClick("/product-grid")}>
+            {t("shop")}
+          </Link>
+          <Select
+            w="100px"
+            onChange={handleLanguageChange}
+            defaultValue={i18n.language}
+            bg={useColorModeValue("gray.700", "gray.700")}
+            color={useColorModeValue("gray.500", "white")}
+            borderColor={useColorModeValue("gray.600", "gray.600")}
+          >
+            <option value="en">English</option>
+            <option value="ar">العربية</option>
+          </Select>
+
+          {/* Color Mode Switch - Only Visible When Menu is Open */}
           <ColorModeSwitch />
+          {/* Cart Icon */}
           <Popover trigger="hover">
             <PopoverTrigger>
               <Link position="relative">
@@ -303,7 +326,7 @@ const NavBar: React.FC = () => {
                     justifyContent="center"
                     bg="transparent"
                   >
-                    {totalItems}
+                    {toArabicNumerals(totalItems, isArabic)}
                   </Badge>
                 )}
               </Link>

@@ -34,14 +34,14 @@ const HomePage: React.FC = () => {
 
   // Determine which images to display based on breakpoint
   const imagesToShow = useBreakpointValue({
-    base: mobileImages, // Mobile images
-    md: pcImages, // PC images
+    base: mobileImages,
+    md: pcImages,
   });
 
   // Determine which product slider to display based on breakpoint
   const ProductSliderToShow = useBreakpointValue({
-    base: MobileProductSlider, // Mobile product slider
-    md: DesktopProductSlider, // Desktop product slider
+    base: MobileProductSlider,
+    md: DesktopProductSlider,
   });
 
   const [name, setName] = React.useState("");
@@ -95,11 +95,13 @@ const HomePage: React.FC = () => {
           {t("topSellers")}
         </Heading>
       </Box>
+
       <Box textAlign="center" mt={10}>
         {/* Conditionally render the appropriate product slider */}
         {ProductSliderToShow && <ProductSliderToShow />}
       </Box>
-      <Box mt={10} width="90%" mx="auto">
+
+      <Box mt={10} width="85%" mx="auto">
         <Heading as="h2" size="lg" mb={4} textAlign="center">
           {t("contactUs")}
         </Heading>

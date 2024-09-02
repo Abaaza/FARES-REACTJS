@@ -13,46 +13,29 @@ import {
   useColorModeValue,
   Flex,
 } from "@chakra-ui/react";
-import products from "./product";
 import { useCart } from "./CartContext";
 import DesktopProductSlider from "./DesktopProductSlider";
-import MobileProductSlider from "./MobileProductSlider";
+import MobileProductSlider from "./MobileProductSlider"; // Import the MobileProductSlider
 import { useTranslation } from "react-i18next";
-
-interface Variant {
-  id: string;
-  size: string;
-  price: number;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  images: string[];
-  variants: Variant[];
-  color: string[];
-  theme: string;
-  threePiece: string;
-}
+import useTranslatedProducts from "./product";
+import { Variant } from "./types";
 
 const ProductPage: React.FC = () => {
-  const { t } = useTranslation(); // Use the translation hook
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
-  const product = products.find((product) => product.id === id);
   const navigate = useNavigate();
   const { addItem } = useCart();
+
+  const translatedProducts = useTranslatedProducts();
+  const product = translatedProducts.find((product) => product.id === id);
 
   const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
   const [selectedVariant, setSelectedVariant] = useState<Variant | undefined>(
     product?.variants[0]
   );
-  const [selectedImage, setSelectedImage] = useState<string>(() => {
-    if (product && product.images.length > 0) {
-      return product.images[0];
-    }
-    return "";
-  });
+  const [selectedImage, setSelectedImage] = useState<string>(
+    product?.images[0] || ""
+  );
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -73,7 +56,7 @@ const ProductPage: React.FC = () => {
   }
 
   const handleVariantChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const variant = product.variants.find(
+    const variant = product?.variants.find(
       (variant) => variant.id === event.target.value
     );
     setSelectedVariant(variant);
@@ -96,7 +79,6 @@ const ProductPage: React.FC = () => {
   const descriptionBg = useColorModeValue("gray.50", "gray.700");
   const descriptionFontSize = useBreakpointValue({ base: "md", md: "lg" });
 
-  // Filter out invalid or missing images
   const validImages = product.images.filter(
     (image) => image && image.trim() !== ""
   );
@@ -119,7 +101,6 @@ const ProductPage: React.FC = () => {
             />
           </Box>
 
-          {/* Thumbnails */}
           {validImages.length > 1 && (
             <SimpleGrid
               columns={{
@@ -172,7 +153,7 @@ const ProductPage: React.FC = () => {
           >
             {product.variants.map((variant) => (
               <option key={variant.id} value={variant.id}>
-                {variant.size} - {variant.price} EGP
+                {variant.size} - {variant.displayPrice} {t("currency")}
               </option>
             ))}
           </Select>
@@ -180,10 +161,14 @@ const ProductPage: React.FC = () => {
           {selectedVariant && (
             <>
               <Text fontWeight="bold" mb={0}>
-                {t("selectedSize", { size: selectedVariant.size })}
+                {t("selectedSize", {
+                  size: selectedVariant.size,
+                })}
               </Text>
               <Text fontWeight="bold" mb={0}>
-                {t("price", { price: selectedVariant.price })}
+                {t("price", {
+                  price: selectedVariant.displayPrice,
+                })}
               </Text>
               <Text fontWeight="bold" mb={0}>
                 {t("material")}

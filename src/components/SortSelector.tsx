@@ -12,14 +12,14 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
-import { useTranslation } from "react-i18next"; // Import useTranslation
+import { useTranslation } from "react-i18next";
 
 interface SortSelectorProps {
   themes: string[];
   colors: string[];
   threePOptions: { value: string; label: string }[];
   onThemeSelect: (theme: string) => void;
-  onColorSelect: (colors: string[]) => void; // Accept multiple colors
+  onColorSelect: (colors: string[]) => void;
   onThreePSelect: (option: string) => void;
   onResetFilters: () => void;
 }
@@ -33,7 +33,7 @@ const SortSelector: React.FC<SortSelectorProps> = ({
   onThreePSelect,
   onResetFilters,
 }) => {
-  const { t } = useTranslation(); // Use the translation hook
+  const { t } = useTranslation();
   const [selectedTheme, setSelectedTheme] = React.useState<string>("");
   const [selectedColors, setSelectedColors] = React.useState<string[]>([]);
   const [selectedThreeP, setSelectedThreeP] = React.useState<string>("");
@@ -74,7 +74,6 @@ const SortSelector: React.FC<SortSelectorProps> = ({
 
   return (
     <Wrap spacing={2} mb={4} direction={{ base: "column", sm: "row" }}>
-      {/* Desktop view */}
       <WrapItem display={{ base: "none", sm: "block" }}>
         <Menu>
           <MenuButton as={Button} rightIcon={<BsChevronDown />}>
@@ -132,7 +131,6 @@ const SortSelector: React.FC<SortSelectorProps> = ({
         <Button onClick={handleResetFilters}>{t("resetFilters")}</Button>
       </WrapItem>
 
-      {/* Mobile view */}
       <SimpleGrid
         columns={{ base: 2, md: 2 }}
         spacing={2}

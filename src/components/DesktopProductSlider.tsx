@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   CarouselProvider,
   Slider,
@@ -7,28 +7,12 @@ import {
   ButtonNext,
 } from "pure-react-carousel";
 import "pure-react-carousel/dist/react-carousel.es.css";
-import products from "./product";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import styles from "./DesktopProductSlider.module.css";
 import { useTranslation } from "react-i18next";
-
-interface Variant {
-  id: string;
-  size: string;
-  price: number;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  images: string[];
-  variants: Variant[];
-  color: string[];
-  theme: string;
-  threePiece: string;
-}
+import useTranslatedProducts from "./product"; // Assume this hook provides a translated list of products
+import { Product, Variant } from "./types"; // Import Product and Variant types
 
 interface PriceRange {
   min: number;
@@ -53,15 +37,23 @@ const getSizeCount = (variants: Variant[]): number => {
 };
 
 const getRandomProducts = (products: Product[], count: number): Product[] => {
-  const shuffled = products.sort(() => 0.5 - Math.random());
+  const shuffled = [...products].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 };
 
-const DesktopProductSlider: React.FC = React.memo(() => {
+// Function to convert numbers to Arabic numerals
+const convertToArabicNumerals = (input: number): string => {
+  return input
+    .toString()
+    .replace(/\d/g, (digit) => "٠١٢٣٤٥٦٧٨٩"[parseInt(digit, 10)]); // Convert 'digit' to number
+};
+
+const DesktopProductSlider: React.FC = () => {
+  const products = useTranslatedProducts(); // Hook for translated products
   const [limitedProducts, setLimitedProducts] = useState<Product[]>([]);
   const [visibleSlides, setVisibleSlides] = useState<number>(4);
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation(); // Destructure 'i18n' to get the current language
 
   const updateVisibleSlides = useCallback(() => {
     const isMobile = window.innerWidth < 768;
@@ -69,19 +61,12 @@ const DesktopProductSlider: React.FC = React.memo(() => {
   }, []);
 
   useEffect(() => {
-    let sessionProducts = sessionStorage.getItem("limitedProducts");
+    setLimitedProducts(getRandomProducts(products, 15));
+  }, [products]); // Update products when translations change
 
-    if (sessionProducts) {
-      setLimitedProducts(JSON.parse(sessionProducts));
-    } else {
-      const randomProducts = getRandomProducts(products, 20);
-      sessionStorage.setItem("limitedProducts", JSON.stringify(randomProducts));
-      setLimitedProducts(randomProducts);
-    }
-
+  useEffect(() => {
     updateVisibleSlides();
     window.addEventListener("resize", updateVisibleSlides);
-
     return () => {
       window.removeEventListener("resize", updateVisibleSlides);
     };
@@ -106,9 +91,20 @@ const DesktopProductSlider: React.FC = React.memo(() => {
         isIntrinsicHeight
       >
         <Slider>
-          {limitedProducts.map((product: Product, index: number) => {
+          {limitedProducts.map((product, index) => {
             const priceRange = getPriceRange(product.variants);
             const sizeCount = getSizeCount(product.variants);
+
+            // Convert prices to Arabic numerals if the language is Arabic
+            const displayMinPrice =
+              i18n.language === "ar"
+                ? convertToArabicNumerals(priceRange.min)
+                : priceRange.min.toString();
+
+            const displayMaxPrice =
+              i18n.language === "ar"
+                ? convertToArabicNumerals(priceRange.max)
+                : priceRange.max.toString();
 
             return (
               <Slide index={index} key={product.id} className={styles.slide}>
@@ -126,8 +122,8 @@ const DesktopProductSlider: React.FC = React.memo(() => {
                     <div>
                       <p>
                         {t("priceRange", {
-                          min: priceRange.min,
-                          max: priceRange.max,
+                          min: displayMinPrice,
+                          max: displayMaxPrice,
                         })}
                       </p>
                       {sizeCount} {t("sizesAvailable")}
@@ -148,6 +144,6 @@ const DesktopProductSlider: React.FC = React.memo(() => {
       </CarouselProvider>
     </div>
   );
-});
+};
 
-export default DesktopProductSlider;
+export default React.memo(DesktopProductSlider);

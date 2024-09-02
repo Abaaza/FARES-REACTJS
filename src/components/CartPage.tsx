@@ -10,16 +10,23 @@ import {
   HStack,
   IconButton,
 } from "@chakra-ui/react";
-import { useCart } from "./CartContext"; // Import the useCart hook
+import { useCart } from "./CartContext";
 import { useNavigate } from "react-router-dom";
-import { FaTrash } from "react-icons/fa"; // Import a trash icon for the remove button
-import { useTranslation } from "react-i18next"; // Import the useTranslation hook
+import { FaTrash } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 const SHIPPING_COST = 70;
 const FREE_SHIPPING_THRESHOLD = 2000;
 
+// Utility function to convert numbers to Arabic numerals
+const convertToArabicNumerals = (input: number): string => {
+  return input
+    .toString()
+    .replace(/\d/g, (digit) => "٠١٢٣٤٥٦٧٨٩"[parseInt(digit, 10)]);
+};
+
 const CartPage: React.FC = () => {
-  const { t } = useTranslation(); // Initialize translation hook
+  const { t, i18n } = useTranslation();
   const { cart, removeItem, increaseQuantity, decreaseQuantity } = useCart();
   const navigate = useNavigate();
 
@@ -43,13 +50,35 @@ const CartPage: React.FC = () => {
   const totalBgColor = useColorModeValue("gray.50", "gray.700");
   const headingColor = useColorModeValue("gray.800", "gray.100");
 
+  // Convert numbers based on the current language
+  const formatAndConvertNumber = (number: number) => {
+    return i18n.language === "ar"
+      ? convertToArabicNumerals(number)
+      : number.toLocaleString(); // Use locale string for formatting in English
+  };
+
+  // Function to get translated product name
+  const getTranslatedProductName = (name: string) => {
+    return t(`products.${name}`, name);
+  };
+
+  // Function to get translated size
+  const getTranslatedSize = (size: string) => {
+    return t(`sizes.${size}`, size);
+  };
+
+  // Function to get translated currency
+  const getTranslatedCurrency = () => {
+    return t("currency", "EGP");
+  };
+
   return (
     <Box p={5} bg={bgColor} color={textColor}>
       <Heading as="h1" mb={4} color={headingColor}>
-        {t("cartPage.title")}
+        {t("title")}
       </Heading>
       {cart.length === 0 ? (
-        <Text>{t("cartPage.emptyMessage")}</Text>
+        <Text>{t("emptyMessage")}</Text>
       ) : (
         <VStack spacing={4} align="stretch">
           {cart.map((item) => (
@@ -63,39 +92,39 @@ const CartPage: React.FC = () => {
             >
               <HStack spacing={4} align="center">
                 <Image
-                  src={item.image} // Use the image URL from the cart item
+                  src={item.image}
                   alt={item.name}
                   boxSize="100px"
                   objectFit="cover"
                   borderRadius="md"
-                  fallbackSrc="path/to/placeholder-image.png" // Fallback image
+                  fallbackSrc="path/to/placeholder-image.png"
                   onError={(e) => {
-                    // Handle image load error
                     e.currentTarget.src = "path/to/placeholder-image.png";
                   }}
                 />
                 <VStack align="start" spacing={2} flex="1">
                   <Heading size="md" color={headingColor}>
-                    {item.name}
+                    {getTranslatedProductName(item.name)}
                   </Heading>
                   <Text color={textColor}>
-                    {t("cartPage.sizeLabel")}: {item.size}
+                    {t("sizeLabel")}: {getTranslatedSize(item.size)}
                   </Text>
                   <Text color={textColor}>
-                    {t("cartPage.priceLabel")}: {item.price} EGP
+                    {t("priceLabel")}: {formatAndConvertNumber(item.price)}{" "}
+                    {getTranslatedCurrency()}
                   </Text>
                   <HStack spacing={2}>
                     <Button size="sm" onClick={() => decreaseQuantity(item.id)}>
                       -
                     </Button>
                     <Text color={textColor}>
-                      {t("cartPage.qtyLabel")}: {item.quantity}
+                      {t("qtyLabel")}: {formatAndConvertNumber(item.quantity)}
                     </Text>
                     <Button size="sm" onClick={() => increaseQuantity(item.id)}>
                       +
                     </Button>
                     <IconButton
-                      aria-label={t("cartPage.removeItem")}
+                      aria-label={t("removeItem")}
                       icon={<FaTrash />}
                       colorScheme="red"
                       size="sm"
@@ -116,22 +145,24 @@ const CartPage: React.FC = () => {
             borderRadius="md"
           >
             <Text fontSize="lg" fontWeight="bold" color={headingColor}>
-              {t("cartPage.subtotal", { subtotal: totalPrice })}
+              {t("subtotal")}: {formatAndConvertNumber(totalPrice)}{" "}
+              {t("currency")}
             </Text>
             <Text fontSize="lg" color={textColor}>
-              {t("cartPage.shipping", { shipping: shippingCost })}
+              {t("shipping")}: {formatAndConvertNumber(shippingCost)}{" "}
+              {t("currency")}
             </Text>
             {totalPrice >= FREE_SHIPPING_THRESHOLD && (
               <Text fontSize="lg" color="green.500">
-                {t("cartPage.freeShipping")}
+                {t("freeShipping")}
               </Text>
             )}
             <Text fontSize="lg" fontWeight="bold" color={headingColor}>
-              {t("cartPage.total", { total: grandTotal })}
+              {t("total")}: {formatAndConvertNumber(grandTotal)} {t("currency")}
             </Text>
           </Box>
           <Button colorScheme="teal" onClick={handleCheckout}>
-            {t("cartPage.proceedToCheckout")}
+            {t("proceedToCheckout")}
           </Button>
         </VStack>
       )}

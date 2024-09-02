@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 interface ProductCardProps {
   name: string;
   image: string;
-  priceRange: { min: number; max: number };
+  priceRange: { min: number; max: number }; // Keep for any calculations or logic requiring numeric prices
+  displayPriceRange: { min: string; max: string }; // Add this property for Arabic numeral support
   sizes: string[];
   onClick: () => void;
   sizeCount: number;
@@ -14,6 +15,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   name,
   image,
   priceRange,
+  displayPriceRange, // Include displayPriceRange in the props
   sizes,
   onClick,
   sizeCount,
@@ -34,8 +36,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
       />
       <div>
         <h3>{name}</h3>
+        {/* Use displayPriceRange for displaying the price */}
         <p>
-          {t("priceLabel")}: {priceRange.min} - {priceRange.max} {t("currency")}
+          {t("priceLabel")}: {displayPriceRange.min} - {displayPriceRange.max}{" "}
+          {t("currency")}
         </p>
         <p>
           {sizeCount} {t("sizesAvailable")}

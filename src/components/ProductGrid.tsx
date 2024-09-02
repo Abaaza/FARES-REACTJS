@@ -1,45 +1,44 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { Button, Box, Spacer } from "@chakra-ui/react";
 import ProductCard from "./ProductCard";
-import { getPriceRange, getSizes } from "./productUtils";
+import { getPriceRange, getSizes, getDisplayPriceRange } from "./productUtils";
 import { useProductFilters } from "./productUtils";
 import SortSelector from "./SortSelector";
-import products from "./product";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { Container, StyledSimpleGrid } from "./StyledComponents";
-import { useTranslation } from "react-i18next"; // Import useTranslation
+import { useTranslation } from "react-i18next";
+import useTranslatedProducts from "./product";
 
 // Utility function to shuffle the products array
 function shuffleArray(array: any[]) {
-  return array.sort(() => Math.random() - 0.5);
+  return array.slice().sort(() => Math.random() - 0.5);
 }
 
 const ProductGrid: React.FC = () => {
-  const { t } = useTranslation(); // Use the translation hook
+  const { t } = useTranslation();
   const [visibleCount, setVisibleCount] = useState(20);
   const [selectedTheme, setSelectedTheme] = useState<string>("");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedThreeP, setSelectedThreeP] = useState<string>("");
-  const [shuffledProducts, setShuffledProducts] = useState<any[]>([]);
 
-  const { colors, threePOptions } = useProductFilters();
-  const navigate = useNavigate();
+  const translatedProducts = useTranslatedProducts();
+  const navigate = useNavigate(); // Use useNavigate hook
 
-  useEffect(() => {
-    // Check if the shuffled product array is already stored in sessionStorage
-    const storedProducts = sessionStorage.getItem("shuffledProducts");
+  const shuffledProducts = useMemo(
+    () => shuffleArray(translatedProducts),
+    [translatedProducts]
+  );
 
-    if (storedProducts) {
-      setShuffledProducts(JSON.parse(storedProducts));
-    } else {
-      // Shuffle the products array and store it in sessionStorage
-      const shuffled = shuffleArray([...products]);
-      sessionStorage.setItem("shuffledProducts", JSON.stringify(shuffled));
-      setShuffledProducts(shuffled);
-    }
-  }, []);
+  // Extract unique values from translatedProducts
+  const themes = Array.from(new Set(translatedProducts.map((p) => p.theme)));
+  const colors = Array.from(
+    new Set(translatedProducts.flatMap((p) => p.color))
+  );
+  const threePOptions = [
+    { value: "No", label: t("onePiece") },
+    { value: "Yes", label: t("threePieces") },
+  ];
 
-  // Memoize filtered products based on user filters
   const filteredProducts = useMemo(() => {
     return shuffledProducts.filter((product) => {
       const matchesTheme = selectedTheme
@@ -61,7 +60,7 @@ const ProductGrid: React.FC = () => {
   };
 
   const handleCardClick = (productId: string) => {
-    navigate(`/product/${productId}`);
+    navigate(`/product/${productId}`); // Use navigate for routing
   };
 
   const handleResetFilters = () => {
@@ -74,12 +73,9 @@ const ProductGrid: React.FC = () => {
     <Container>
       <Box mt={7} mb={5}>
         <SortSelector
-          themes={Array.from(new Set(products.map((p) => p.theme)))}
-          colors={Array.from(new Set(products.flatMap((p) => p.color)))}
-          threePOptions={[
-            { value: "No", label: t("onePiece") }, // Use translation
-            { value: "Yes", label: t("threePieces") }, // Use translation
-          ]}
+          themes={themes}
+          colors={colors}
+          threePOptions={threePOptions}
           onThemeSelect={setSelectedTheme}
           onColorSelect={setSelectedColors}
           onThreePSelect={setSelectedThreeP}
@@ -90,14 +86,16 @@ const ProductGrid: React.FC = () => {
       <StyledSimpleGrid columns={{ base: 2, sm: 2, md: 3, lg: 4 }} spacing={5}>
         {filteredProducts.slice(0, visibleCount).map((product) => {
           const priceRange = getPriceRange(product.variants);
+          const displayPriceRange = getDisplayPriceRange(product.variants);
           const sizes = getSizes(product.variants);
 
           return (
             <ProductCard
               key={product.id}
               name={product.name}
-              image={product.images[0]} // Use the first image or adjust as needed
+              image={product.images[0] ?? ""}
               priceRange={priceRange}
+              displayPriceRange={displayPriceRange}
               sizes={sizes}
               sizeCount={sizes.length}
               onClick={() => handleCardClick(product.id)}
@@ -107,8 +105,7 @@ const ProductGrid: React.FC = () => {
       </StyledSimpleGrid>
       {visibleCount < filteredProducts.length && (
         <Box textAlign="center" mt={5}>
-          <Button onClick={showMoreItems}>{t("showMore")}</Button>{" "}
-          {/* Use translation */}
+          <Button onClick={showMoreItems}>{t("showMore")}</Button>
         </Box>
       )}
     </Container>

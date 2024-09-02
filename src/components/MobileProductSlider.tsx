@@ -7,18 +7,25 @@ import {
   ButtonNext,
 } from "pure-react-carousel";
 import "pure-react-carousel/dist/react-carousel.es.css";
-import products from "./product";
+import useTranslatedProducts from "./product"; // Updated import to use hook for translated products
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import styles from "./MobileProductSlider.module.css";
 import { useNavigate } from "react-router-dom";
-import { Product, Variant } from "./types"; // Import Product and Variant types
+import { Product, Variant } from "./types";
 import { Box } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next"; // Import useTranslation
+import { useTranslation } from "react-i18next";
 
-const MobileProductSlider: React.FC = React.memo(() => {
+const convertToArabicNumerals = (input: number): string => {
+  return input
+    .toString()
+    .replace(/\d/g, (digit) => "٠١٢٣٤٥٦٧٨٩"[parseInt(digit, 10)]);
+};
+
+const MobileProductSlider: React.FC = () => {
+  const { t, i18n } = useTranslation(); // Hook to detect language changes
+  const products = useTranslatedProducts(); // Fetch translated products internally
   const [limitedProducts, setLimitedProducts] = useState<Product[]>([]);
   const navigate = useNavigate();
-  const { t } = useTranslation(); // Initialize useTranslation
 
   const getRandomProducts = useCallback(
     (products: Product[], count: number): Product[] => {
@@ -29,19 +36,16 @@ const MobileProductSlider: React.FC = React.memo(() => {
   );
 
   useEffect(() => {
-    let sessionProducts = sessionStorage.getItem("limitedProductsMobile");
+    // We need to ensure that products are updated when the language changes
+    const randomProducts = getRandomProducts(products, 15);
+    setLimitedProducts(randomProducts);
 
-    if (sessionProducts) {
-      setLimitedProducts(JSON.parse(sessionProducts));
-    } else {
-      const randomProducts = getRandomProducts(products, 15);
-      sessionStorage.setItem(
-        "limitedProductsMobile",
-        JSON.stringify(randomProducts)
-      );
-      setLimitedProducts(randomProducts);
-    }
-  }, [getRandomProducts]);
+    // Store products in session storage in case we need to refresh the view
+    sessionStorage.setItem(
+      "limitedProductsMobile",
+      JSON.stringify(randomProducts)
+    );
+  }, [getRandomProducts, products, i18n.language]); // Added `i18n.language` as a dependency to refresh on language change
 
   const handleSlideClick = useCallback(
     (productId: string) => {
@@ -72,86 +76,95 @@ const MobileProductSlider: React.FC = React.memo(() => {
   }, []);
 
   return (
-    <>
-      <div className={styles.sliderWrapper}>
-        <CarouselProvider
-          naturalSlideWidth={340} // Set to 340px
-          naturalSlideHeight={450} // Adjust to maintain aspect ratio
-          totalSlides={limitedProducts.length}
-          visibleSlides={2} // Show 2 slides on mobile
-          infinite
-          isIntrinsicHeight
-        >
-          <Slider>
-            {limitedProducts.map((product: Product) => {
-              const { min, max } = getPriceRange(product.variants);
-              const sizeCount = getSizeCount(product.variants);
+    <div className={styles.sliderWrapper}>
+      <CarouselProvider
+        naturalSlideWidth={340}
+        naturalSlideHeight={450}
+        totalSlides={limitedProducts.length}
+        visibleSlides={2}
+        infinite
+        isIntrinsicHeight
+      >
+        <Slider>
+          {limitedProducts.map((product: Product, index) => {
+            const { min, max } = getPriceRange(product.variants);
+            const sizeCount = getSizeCount(product.variants);
 
-              return (
-                <Slide
-                  index={limitedProducts.indexOf(product)}
-                  key={product.id}
-                  className={styles.slide}
+            const displayMinPrice =
+              i18n.language === "ar"
+                ? convertToArabicNumerals(min)
+                : min.toString();
+
+            const displayMaxPrice =
+              i18n.language === "ar"
+                ? convertToArabicNumerals(max)
+                : max.toString();
+
+            return (
+              <Slide index={index} key={product.id} className={styles.slide}>
+                <div
+                  onClick={() => handleSlideClick(product.id)}
+                  className={styles.details}
                 >
-                  <div
-                    onClick={() => handleSlideClick(product.id)}
-                    className={styles.details}
-                  >
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      className={styles.image}
-                    />
+                  <img
+                    src={product.images[0]}
+                    alt={product.name}
+                    className={styles.image}
+                  />
+                  <div>
+                    <h2>{product.name}</h2>
                     <div>
-                      <h2>{product.name}</h2>
-                      <div>
-                        <p>{t("priceRange", { min, max })}</p>
-                        {sizeCount} {t("sizesAvailable")}
-                      </div>
+                      <p>
+                        {t("priceRange", {
+                          min: displayMinPrice,
+                          max: displayMaxPrice,
+                        })}
+                      </p>
+                      {sizeCount} {t("sizesAvailable")}
                     </div>
                   </div>
-                </Slide>
-              );
-            })}
-          </Slider>
+                </div>
+              </Slide>
+            );
+          })}
+        </Slider>
 
-          <Box position="relative">
-            <ButtonBack>
-              <Box
-                position="absolute"
-                top="-400%"
-                left="10px"
-                transform="translateY(-50%)"
-                background="transparent"
-                border="none"
-                cursor="pointer"
-                zIndex="10"
-                padding="10px"
-              >
-                <FaChevronLeft size={28} />
-              </Box>
-            </ButtonBack>
+        <Box position="relative">
+          <ButtonBack>
+            <Box
+              position="absolute"
+              top="-400%"
+              left="10px"
+              transform="translateY(-50%)"
+              background="transparent"
+              border="none"
+              cursor="pointer"
+              zIndex="10"
+              padding="10px"
+            >
+              <FaChevronLeft size={28} />
+            </Box>
+          </ButtonBack>
 
-            <ButtonNext>
-              <Box
-                position="absolute"
-                top="-400%"
-                right="10px"
-                transform="translateY(-50%)"
-                background="transparent"
-                border="none"
-                cursor="pointer"
-                zIndex="10"
-                padding="10px"
-              >
-                <FaChevronRight size={28} />
-              </Box>
-            </ButtonNext>
-          </Box>
-        </CarouselProvider>
-      </div>
-    </>
+          <ButtonNext>
+            <Box
+              position="absolute"
+              top="-400%"
+              right="10px"
+              transform="translateY(-50%)"
+              background="transparent"
+              border="none"
+              cursor="pointer"
+              zIndex="10"
+              padding="10px"
+            >
+              <FaChevronRight size={28} />
+            </Box>
+          </ButtonNext>
+        </Box>
+      </CarouselProvider>
+    </div>
   );
-});
+};
 
-export default MobileProductSlider;
+export default React.memo(MobileProductSlider);

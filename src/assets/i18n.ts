@@ -11,13 +11,27 @@ i18n
     resources: {
       en: {
         translation: {
+          "cartPage": {
+            "title": "Your Cart",
+            "emptyMessage": "Your cart is empty",
+            "sizeLabel": "Size",
+            "priceLabel": "Price",
+            "qtyLabel": "Qty",
+            "shipping": "Shipping:",
+            "freeShipping": "Free Shipping Eligible",
+            "subtotal": "Subtotal: ",
+            "total": "Total:",
+            "proceedToCheckout": "Proceed to Checkout",
+            "removeItem": "Remove item"
+          },
+       
           priceRange: "Price: {{min}} - {{max}} EGP",
-      availableSizes: "{{count}} {{count, plural, one {size} other {sizes}}} available",
+          availableSizes: "{{count}} {{count, plural, one {size} other {sizes}}} available",
           darkMode: "Dark Mode",
           productName: "Product Name",
           selectSize: "Select size",
           selectedSize: "Selected Size: {{size}}",
-          price: "Price: {{price}} EGP",
+          price: "Price:",
           material: "Material: Canvas",
           addToCart: "Add to cart",
           productDescription: "Product Description",
@@ -59,29 +73,15 @@ i18n
           total_price: "Total Price",
           view_cart: "View Cart",
           cart_tooltip: "Cart ({{count}}) - Shipping: {{shipping}} EGP",
-          "cartPage": {
-            "title": "Your Cart",
-            "emptyMessage": "Your cart is empty",
-            "sizeLabel": "Size",
-            "priceLabel": "Price",
-            "qtyLabel": "Qty",
-            "shipping": "Shipping: {{shipping}} EGP (6 business days)",
-            "freeShipping": "Free Shipping Eligible",
-            "subtotal": "Subtotal: {{subtotal}} EGP",
-            "total": "Total: {{total}} EGP",
-            "proceedToCheckout": "Proceed to Checkout",
-            "removeItem": "Remove item"
-          },
-       
           title: "Your Cart",
             emptyMessage: "Your cart is empty",
             sizeLabel: "Size",
-         
+        
             qtyLabel: "Qty",
-            shipping: "Shipping: {{shipping}} EGP (6 business days)",
+            shipping: "Shipping:  ",
             freeShipping: "Free Shipping Eligible",
-            subtotal: "Subtotal: {{subtotal}} EGP",
-            total: "Total: {{total}} EGP",
+            subtotal: "Subtotal:  EGP",
+            total: "Total:  EGP",
             proceedToCheckout: "Proceed to Checkout",
             removeItem: "Remove item",
             checkout: "Checkout",
@@ -95,8 +95,7 @@ i18n
             comments: "Comments",
             paymentMethod: "Payment Method",
             cashOnDelivery: "Cash on Delivery",
-         
-         
+                 
           
        
             placeOrder: "Place Order",
@@ -127,12 +126,27 @@ i18n
             resetFilters: "Reset Filters",
             selectedColors: "{{count}} Colors Selected",
           wallFrame: "Wall Frame",
-            
-            
+          abstract: "Abstract",            
+          
         },
       },
       ar: {
         translation: {
+              
+          "cartPage": {
+        "title": "سلة التسوق",
+        "emptyMessage": "سلة التسوق الخاصة بك فارغة",
+        "sizeLabel": "المقاس",
+        "priceLabel": "السعر",
+        "qtyLabel": "الكمية",
+        "shipping": "الشحن: ",
+        "freeShipping": "مؤهل للشحن المجاني",
+        "subtotal": "المجموع الفرعي: ",
+        "total": "الإجمالي: ",
+        "proceedToCheckout": "الانتقال إلى الدفع",
+        "removeItem": "إزالة العنصر"
+      },
+      abstract: "تجريدي",
           theme: "موضوع",
           wallFrame: "تابلوه حائط",
           colors: "الألوان",
@@ -151,7 +165,7 @@ i18n
           productName: "اسم المنتج",
           selectSize: "اختر الحجم",
           selectedSize: "الحجم المحدد: {{size}}",
-          price: "السعر: {{price}} جنيه مصري",
+          price: "السعر:",
           material: "الخامه: قماش",
           addToCart: "أضف إلى السلة",
           productDescription: "وصف المنتج",
@@ -224,19 +238,6 @@ i18n
           cart_tooltip: "السلة ({{count}}) - الشحن: {{shipping}} EGP",
           
      
-          "cartPage": {
-        "title": "سلة التسوق",
-        "emptyMessage": "سلة التسوق الخاصة بك فارغة",
-        "sizeLabel": "المقاس",
-        "priceLabel": "السعر",
-        "qtyLabel": "الكمية",
-        "shipping": "الشحن: {{shipping}} EGP (6 أيام عمل)",
-        "freeShipping": "مؤهل للشحن المجاني",
-        "subtotal": "المجموع الفرعي: {{subtotal}} EGP",
-        "total": "الإجمالي: {{total}} EGP",
-        "proceedToCheckout": "الانتقال إلى الدفع",
-        "removeItem": "إزالة العنصر"
-      },
      
           emptyMessage: "سلة التسوق الخاصة بك فارغة",
           sizeLabel: "المقاس",
