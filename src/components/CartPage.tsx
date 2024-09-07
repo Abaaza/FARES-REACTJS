@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Heading,
@@ -10,13 +10,23 @@ import {
   HStack,
   IconButton,
 } from "@chakra-ui/react";
-import { useCart } from "./CartContext";
+import { useCart } from "./CartContext"; // Ensure CartContext provides necessary methods
 import { useNavigate } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 const SHIPPING_COST = 70;
 const FREE_SHIPPING_THRESHOLD = 2000;
+
+// Define CartItem type if not imported
+interface CartItem {
+  id: string;
+  name: string;
+  size: string;
+  price: number;
+  image: string;
+  quantity: number; // Add quantity field
+}
 
 // Utility function to convert numbers to Arabic numerals
 const convertToArabicNumerals = (input: number): string => {
@@ -29,6 +39,21 @@ const CartPage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { cart, removeItem, increaseQuantity, decreaseQuantity } = useCart();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Initialize cart from localStorage on component mount
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+      // Parse and set cart data if it exists
+      const parsedCart: CartItem[] = JSON.parse(storedCart);
+      // In the updated CartContext, this line is removed as it's not available anymore
+    }
+  }, []); // Removed dependency on setCart
+
+  useEffect(() => {
+    // Store cart in localStorage whenever cart changes
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   const handleCheckout = () => {
     navigate("/checkout");
@@ -83,7 +108,7 @@ const CartPage: React.FC = () => {
         <VStack spacing={4} align="stretch">
           {cart.map((item) => (
             <Box
-              key={item.id}
+              key={`${item.id}-${item.size}`} // Use both id and size as the key
               borderWidth="1px"
               borderRadius="md"
               p={4}
@@ -114,13 +139,19 @@ const CartPage: React.FC = () => {
                     {getTranslatedCurrency()}
                   </Text>
                   <HStack spacing={2}>
-                    <Button size="sm" onClick={() => decreaseQuantity(item.id)}>
+                    <Button
+                      size="sm"
+                      onClick={() => decreaseQuantity(item.id, item.size)}
+                    >
                       -
                     </Button>
                     <Text color={textColor}>
                       {t("qtyLabel")}: {formatAndConvertNumber(item.quantity)}
                     </Text>
-                    <Button size="sm" onClick={() => increaseQuantity(item.id)}>
+                    <Button
+                      size="sm"
+                      onClick={() => increaseQuantity(item.id, item.size)}
+                    >
                       +
                     </Button>
                     <IconButton
@@ -128,7 +159,7 @@ const CartPage: React.FC = () => {
                       icon={<FaTrash />}
                       colorScheme="red"
                       size="sm"
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => removeItem(item.id, item.size)}
                     />
                   </HStack>
                 </VStack>
@@ -146,11 +177,11 @@ const CartPage: React.FC = () => {
           >
             <Text fontSize="lg" fontWeight="bold" color={headingColor}>
               {t("subtotal")}: {formatAndConvertNumber(totalPrice)}{" "}
-              {t("currency")}
+              {getTranslatedCurrency()}
             </Text>
             <Text fontSize="lg" color={textColor}>
               {t("shipping")}: {formatAndConvertNumber(shippingCost)}{" "}
-              {t("currency")}
+              {getTranslatedCurrency()}
             </Text>
             {totalPrice >= FREE_SHIPPING_THRESHOLD && (
               <Text fontSize="lg" color="green.500">
@@ -158,7 +189,8 @@ const CartPage: React.FC = () => {
               </Text>
             )}
             <Text fontSize="lg" fontWeight="bold" color={headingColor}>
-              {t("total")}: {formatAndConvertNumber(grandTotal)} {t("currency")}
+              {t("total")}: {formatAndConvertNumber(grandTotal)}{" "}
+              {getTranslatedCurrency()}
             </Text>
           </Box>
           <Button colorScheme="teal" onClick={handleCheckout}>

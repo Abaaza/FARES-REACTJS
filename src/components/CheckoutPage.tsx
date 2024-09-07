@@ -16,6 +16,7 @@ import {
 import { useCart } from "./CartContext";
 import emailjs from "emailjs-com";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const SHIPPING_COST = 70;
 const FREE_SHIPPING_THRESHOLD = 2000;
@@ -46,6 +47,8 @@ const CheckoutPage: React.FC = () => {
   const [comments, setComments] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [email, setEmail] = useState("");
+
+  const navigate = useNavigate();
 
   const bgColor = useColorModeValue("gray.50", "gray.800");
   const textColor = useColorModeValue("gray.800", "gray.200");
@@ -125,7 +128,7 @@ const CheckoutPage: React.FC = () => {
       )
       .then((response) => {
         console.log("Success:", response);
-        alert(t("orderConfirmation"));
+        navigate("/thank-you"); // Navigate to the Thank You page
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -242,7 +245,7 @@ const CheckoutPage: React.FC = () => {
         </FormControl>
         <FormControl isRequired>
           <FormLabel color={textColor}>{t("country")}</FormLabel>
-          <Input value={t("Egypt")} isReadOnly bg={formBgColor} />
+          <Input value={t("Egypt")} readOnly bg={formBgColor} />
         </FormControl>
         <FormControl>
           <FormLabel color={textColor}>{t("comments")}</FormLabel>
@@ -264,7 +267,7 @@ const CheckoutPage: React.FC = () => {
             <option value="cash">{t("cashOnDelivery")}</option>
           </Select>
         </FormControl>
-        <Button colorScheme="teal" onClick={handlePlaceOrder}>
+        <Button mt={4} colorScheme="teal" onClick={handlePlaceOrder}>
           {t("placeOrder")}
         </Button>
       </VStack>

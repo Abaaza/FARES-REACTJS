@@ -20,7 +20,19 @@ const ProductCard: React.FC<ProductCardProps> = ({
   onClick,
   sizeCount,
 }) => {
-  const { t } = useTranslation(); // Get the translation function
+  const { t, i18n } = useTranslation(); // Get the translation function and i18n object
+
+  // Function to convert numbers to Arabic numerals if the current language is Arabic
+  const formatNumber = (number: number): string => {
+    if (i18n.language === "ar") {
+      // Convert to Arabic numerals
+      return number
+        .toString()
+        .replace(/\d/g, (digit) => "٠١٢٣٤٥٦٧٨٩"[parseInt(digit, 10)]);
+    }
+    // Return the number as is for other languages
+    return number.toString();
+  };
 
   return (
     <div
@@ -42,7 +54,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {t("currency")}
         </p>
         <p>
-          {sizeCount} {t("sizesAvailable")}
+          {formatNumber(sizeCount)} {t("sizesAvailable")}
         </p>
       </div>
     </div>

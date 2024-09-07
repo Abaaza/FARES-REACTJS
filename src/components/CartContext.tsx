@@ -12,9 +12,9 @@ interface CartItem {
 interface CartContextProps {
   cart: CartItem[];
   addItem: (item: CartItem) => void;
-  removeItem: (itemId: string) => void;
-  increaseQuantity: (itemId: string) => void;
-  decreaseQuantity: (itemId: string) => void;
+  removeItem: (itemId: string, size: string) => void; // Updated to include size
+  increaseQuantity: (itemId: string, size: string) => void; // Updated to include size
+  decreaseQuantity: (itemId: string, size: string) => void; // Updated to include size
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -45,23 +45,27 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     });
   };
 
-  const removeItem = (itemId: string) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== itemId));
+  const removeItem = (itemId: string, size: string) => {
+    setCart((prevCart) =>
+      prevCart.filter((item) => item.id !== itemId || item.size !== size)
+    );
   };
 
-  const increaseQuantity = (itemId: string) => {
+  const increaseQuantity = (itemId: string, size: string) => {
     setCart((prevCart) => {
       const updatedCart = prevCart.map((item) =>
-        item.id === itemId ? { ...item, quantity: item.quantity + 1 } : item
+        item.id === itemId && item.size === size
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
       );
       return updatedCart;
     });
   };
 
-  const decreaseQuantity = (itemId: string) => {
+  const decreaseQuantity = (itemId: string, size: string) => {
     setCart((prevCart) => {
       const updatedCart = prevCart.map((item) =>
-        item.id === itemId && item.quantity > 1
+        item.id === itemId && item.size === size && item.quantity > 1
           ? { ...item, quantity: item.quantity - 1 }
           : item
       );

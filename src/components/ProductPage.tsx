@@ -161,14 +161,10 @@ const ProductPage: React.FC = () => {
           {selectedVariant && (
             <>
               <Text fontWeight="bold" mb={0}>
-                {t("selectedSize", {
-                  size: selectedVariant.size,
-                })}
+                {t("selectedSize", { size: selectedVariant.size })}
               </Text>
               <Text fontWeight="bold" mb={0}>
-                {t("price", {
-                  price: selectedVariant.displayPrice,
-                })}
+                {t("price")} {selectedVariant.displayPrice} {t("currency")}
               </Text>
               <Text fontWeight="bold" mb={0}>
                 {t("material")}

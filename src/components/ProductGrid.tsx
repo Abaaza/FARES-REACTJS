@@ -1,46 +1,70 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Button, Box, Spacer } from "@chakra-ui/react";
 import ProductCard from "./ProductCard";
 import { getPriceRange, getSizes, getDisplayPriceRange } from "./productUtils";
-import { useProductFilters } from "./productUtils";
 import SortSelector from "./SortSelector";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { Container, StyledSimpleGrid } from "./StyledComponents";
 import { useTranslation } from "react-i18next";
 import useTranslatedProducts from "./product";
 
-// Utility function to shuffle the products array
-function shuffleArray(array: any[]) {
-  return array.slice().sort(() => Math.random() - 0.5);
-}
-
 const ProductGrid: React.FC = () => {
-  const { t } = useTranslation();
-  const [visibleCount, setVisibleCount] = useState(20);
-  const [selectedTheme, setSelectedTheme] = useState<string>("");
-  const [selectedColors, setSelectedColors] = useState<string[]>([]);
-  const [selectedThreeP, setSelectedThreeP] = useState<string>("");
+  const { t, i18n } = useTranslation();
+
+  const [visibleCount, setVisibleCount] = useState(() => {
+    try {
+      const savedCount = sessionStorage.getItem("visibleCount");
+      return savedCount ? parseInt(savedCount, 10) : 20;
+    } catch (e) {
+      console.error("Error retrieving visibleCount from sessionStorage", e);
+      return 20;
+    }
+  });
+
+  const [selectedTheme, setSelectedTheme] = useState<string>(() => {
+    try {
+      return sessionStorage.getItem("selectedTheme") || "";
+    } catch (e) {
+      console.error("Error retrieving selectedTheme from sessionStorage", e);
+      return "";
+    }
+  });
+
+  const [selectedColors, setSelectedColors] = useState<string[]>(() => {
+    try {
+      const savedColors = sessionStorage.getItem("selectedColors");
+      return savedColors ? JSON.parse(savedColors) : [];
+    } catch (e) {
+      console.error("Error retrieving selectedColors from sessionStorage", e);
+      return [];
+    }
+  });
+
+  const [selectedThreeP, setSelectedThreeP] = useState<string>(() => {
+    try {
+      return sessionStorage.getItem("selectedThreeP") || "";
+    } catch (e) {
+      console.error("Error retrieving selectedThreeP from sessionStorage", e);
+      return "";
+    }
+  });
 
   const translatedProducts = useTranslatedProducts();
-  const navigate = useNavigate(); // Use useNavigate hook
+  const navigate = useNavigate();
 
-  const shuffledProducts = useMemo(
-    () => shuffleArray(translatedProducts),
-    [translatedProducts]
-  );
+  // Use products directly without shuffling
+  const products = useMemo(() => translatedProducts, [translatedProducts]);
 
-  // Extract unique values from translatedProducts
-  const themes = Array.from(new Set(translatedProducts.map((p) => p.theme)));
-  const colors = Array.from(
-    new Set(translatedProducts.flatMap((p) => p.color))
-  );
+  // Extract unique translated values from translatedProducts
+  const themes = Array.from(new Set(products.map((p) => p.theme)));
+  const colors = Array.from(new Set(products.flatMap((p) => p.color)));
   const threePOptions = [
     { value: "No", label: t("onePiece") },
     { value: "Yes", label: t("threePieces") },
   ];
 
   const filteredProducts = useMemo(() => {
-    return shuffledProducts.filter((product) => {
+    return products.filter((product) => {
       const matchesTheme = selectedTheme
         ? product.theme === selectedTheme
         : true;
@@ -53,14 +77,22 @@ const ProductGrid: React.FC = () => {
 
       return matchesTheme && matchesColor && matchesThreeP;
     });
-  }, [shuffledProducts, selectedTheme, selectedColors, selectedThreeP]);
+  }, [products, selectedTheme, selectedColors, selectedThreeP]);
 
   const showMoreItems = () => {
-    setVisibleCount((prevCount) => prevCount + 20);
+    setVisibleCount((prevCount) => {
+      const newCount = prevCount + 20;
+      try {
+        sessionStorage.setItem("visibleCount", newCount.toString());
+      } catch (e) {
+        console.error("Error setting visibleCount in sessionStorage", e);
+      }
+      return newCount;
+    });
   };
 
   const handleCardClick = (productId: string) => {
-    navigate(`/product/${productId}`); // Use navigate for routing
+    navigate(`/product/${productId}`);
   };
 
   const handleResetFilters = () => {
@@ -68,6 +100,31 @@ const ProductGrid: React.FC = () => {
     setSelectedColors([]);
     setSelectedThreeP("");
   };
+
+  // Save state to sessionStorage when filters change
+  useEffect(() => {
+    try {
+      sessionStorage.setItem("selectedTheme", selectedTheme);
+      sessionStorage.setItem("selectedColors", JSON.stringify(selectedColors));
+      sessionStorage.setItem("selectedThreeP", selectedThreeP);
+    } catch (e) {
+      console.error("Error setting filter values in sessionStorage", e);
+    }
+  }, [selectedTheme, selectedColors, selectedThreeP]);
+
+  // Update products when the language changes
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      // Reload products or perform any actions needed on language change
+      // Here we simply reset the visible count
+      setVisibleCount(20);
+    };
+
+    i18n.on("languageChanged", handleLanguageChange);
+    return () => {
+      i18n.off("languageChanged", handleLanguageChange);
+    };
+  }, [i18n]);
 
   return (
     <Container>

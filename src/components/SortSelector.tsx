@@ -65,10 +65,7 @@ const SortSelector: React.FC<SortSelectorProps> = ({
 
   const getSelectedColorsLabel = () => {
     if (selectedColors.length === 0) return t("colors");
-    if (selectedColors.length === 1)
-      return (
-        selectedColors[0].charAt(0).toUpperCase() + selectedColors[0].slice(1)
-      );
+    if (selectedColors.length === 1) return t(selectedColors[0]);
     return t("selectedColors", { count: selectedColors.length });
   };
 
@@ -77,14 +74,12 @@ const SortSelector: React.FC<SortSelectorProps> = ({
       <WrapItem display={{ base: "none", sm: "block" }}>
         <Menu>
           <MenuButton as={Button} rightIcon={<BsChevronDown />}>
-            {selectedTheme
-              ? selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)
-              : t("theme")}
+            {selectedTheme ? t(selectedTheme) : t("theme")}
           </MenuButton>
           <MenuList>
             {themes.map((theme) => (
               <MenuItem key={theme} onClick={() => handleThemeSelect(theme)}>
-                {theme.charAt(0).toUpperCase() + theme.slice(1)}
+                {t(theme)}
               </MenuItem>
             ))}
           </MenuList>
@@ -103,7 +98,7 @@ const SortSelector: React.FC<SortSelectorProps> = ({
                   isChecked={selectedColors.includes(color)}
                   onChange={() => handleColorSelect(color)}
                 >
-                  {color.charAt(0).toUpperCase() + color.slice(1)}
+                  {t(color)}
                 </Checkbox>
               ))}
             </VStack>
@@ -114,14 +109,17 @@ const SortSelector: React.FC<SortSelectorProps> = ({
         <Menu>
           <MenuButton as={Button} rightIcon={<BsChevronDown />}>
             {selectedThreeP
-              ? threePOptions.find((option) => option.value === selectedThreeP)
-                  ?.label || t("noOfPieces")
+              ? t(
+                  threePOptions.find(
+                    (option) => option.value === selectedThreeP
+                  )?.label || t("noOfPieces")
+                )
               : t("noOfPieces")}
           </MenuButton>
           <MenuList>
             {threePOptions.map(({ value, label }) => (
               <MenuItem key={value} onClick={() => handleThreePSelect(value)}>
-                {label}
+                {t(label)}
               </MenuItem>
             ))}
           </MenuList>
@@ -140,14 +138,12 @@ const SortSelector: React.FC<SortSelectorProps> = ({
         <WrapItem>
           <Menu>
             <MenuButton as={Button} rightIcon={<BsChevronDown />}>
-              {selectedTheme
-                ? selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)
-                : t("theme")}
+              {selectedTheme ? t(selectedTheme) : t("theme")}
             </MenuButton>
             <MenuList>
               {themes.map((theme) => (
                 <MenuItem key={theme} onClick={() => handleThemeSelect(theme)}>
-                  {theme.charAt(0).toUpperCase() + theme.slice(1)}
+                  {t(theme)}
                 </MenuItem>
               ))}
             </MenuList>
@@ -166,7 +162,7 @@ const SortSelector: React.FC<SortSelectorProps> = ({
                     isChecked={selectedColors.includes(color)}
                     onChange={() => handleColorSelect(color)}
                   >
-                    {color.charAt(0).toUpperCase() + color.slice(1)}
+                    {t(color)}
                   </Checkbox>
                 ))}
               </VStack>
@@ -177,15 +173,17 @@ const SortSelector: React.FC<SortSelectorProps> = ({
           <Menu>
             <MenuButton as={Button} rightIcon={<BsChevronDown />}>
               {selectedThreeP
-                ? threePOptions.find(
-                    (option) => option.value === selectedThreeP
-                  )?.label || t("noOfPieces")
+                ? t(
+                    threePOptions.find(
+                      (option) => option.value === selectedThreeP
+                    )?.label || t("noOfPieces")
+                  )
                 : t("noOfPieces")}
             </MenuButton>
             <MenuList>
               {threePOptions.map(({ value, label }) => (
                 <MenuItem key={value} onClick={() => handleThreePSelect(value)}>
-                  {label}
+                  {t(label)}
                 </MenuItem>
               ))}
             </MenuList>

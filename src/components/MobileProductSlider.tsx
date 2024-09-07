@@ -75,6 +75,15 @@ const MobileProductSlider: React.FC = () => {
     return new Set(sizes).size;
   }, []);
 
+  const formatSizeCount = useCallback(
+    (count: number): string => {
+      return i18n.language === "ar"
+        ? convertToArabicNumerals(count)
+        : count.toString();
+    },
+    [i18n.language]
+  );
+
   return (
     <div className={styles.sliderWrapper}>
       <CarouselProvider
@@ -120,7 +129,9 @@ const MobileProductSlider: React.FC = () => {
                           max: displayMaxPrice,
                         })}
                       </p>
-                      {sizeCount} {t("sizesAvailable")}
+                      <p>
+                        {formatSizeCount(sizeCount)} {t("sizesAvailable")}
+                      </p>
                     </div>
                   </div>
                 </div>

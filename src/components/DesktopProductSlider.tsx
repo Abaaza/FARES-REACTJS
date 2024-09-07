@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   CarouselProvider,
   Slider,
@@ -80,6 +80,16 @@ const DesktopProductSlider: React.FC = () => {
     [navigate]
   );
 
+  // Function to format sizeCount based on the selected language
+  const formatSizeCount = useCallback(
+    (count: number): string => {
+      return i18n.language === "ar"
+        ? convertToArabicNumerals(count)
+        : count.toString();
+    },
+    [i18n.language]
+  );
+
   return (
     <div className={styles.sliderWrapper}>
       <CarouselProvider
@@ -126,7 +136,9 @@ const DesktopProductSlider: React.FC = () => {
                           max: displayMaxPrice,
                         })}
                       </p>
-                      {sizeCount} {t("sizesAvailable")}
+                      <p>
+                        {formatSizeCount(sizeCount)} {t("sizesAvailable")}
+                      </p>
                     </div>
                   </div>
                 </div>
