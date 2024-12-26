@@ -31,6 +31,7 @@ i18n
           "Objects":"Objects",
           "Musical": "Musical",
           "Black": "Black",
+          "businessDays" : "6 Business Days",
   "Yellow": "Yellow",
   "Multicolor": "Multicolor",
   "Gold": "Gold",
@@ -40,6 +41,48 @@ i18n
   "Gray": "Gray",
   "Orange": "Orange",
   "Purple": "Purple",
+  "Come Dine with Us": "Come Dine with Us",
+  "Almaza City Center": "Almaza City Center",
+  "Cairo Festival City": "Cairo Festival City",
+  "River Walk": "River Walk",
+  "Heliopolis": "Heliopolis",
+  "Arkan Plaza": "Arkan Plaza",
+  "Madinaty Open Air Mall": "Madinaty Open Air Mall",
+  "Opening Hours": "Opening Hours",
+  "Sat-Wed": "Sat-Wed",
+  "10am - 12pm": "10am - 12pm",
+  "Thu & Fri": "Thu & Fri",
+  "10am - 1am​": "10am - 1am​",
+  "Our Branches": "Our Branches",
+  "Explore our branches located in Egypt. Visit us at any of these locations!": 
+    "Explore our branches located in Egypt. Visit us at any of these locations!",
+  "Riverwalk": "Riverwalk",
+  "New Cairo": "New Cairo",
+  "Riverwalk mall, Mohamed Naguib Axis, New Cairo": 
+    "Riverwalk mall, Mohamed Naguib Axis, New Cairo",
+  "Almaza": "Almaza",
+
+  "City Center Almaza, Suez Road, Heliopolis": 
+    "City Center Almaza, Suez Road, Heliopolis",
+
+  "Cairo Festival City Mall, New Cairo": 
+    "Cairo Festival City Mall, New Cairo",
+  "103 Omar Ibn El Khattab, Heliopolis": 
+    "103 Omar Ibn El Khattab, Heliopolis",
+  "Arkan": "Arkan",
+  "Sheikh Zayed": "Sheikh Zayed",
+  "Arkan Plaza, 6 of October": 
+    "Arkan Plaza, 6 of October",
+  "Air Mall": "Air Mall",
+  "Madinaty": "Madinaty",
+  "Open Air Mall, Madinaty": 
+    "Open Air Mall, Madinaty",
+
+  "branches": "Branches",
+  "menu": "Menu",
+  "contact": "Contact",
+  "privateOccasionsHeading": "For private occasions & catering",
+  "privateOccasionsText": "Please call 01222204651 or fill in the form and we will get back to you shortly",
 
 
           "cartPage": {
@@ -148,8 +191,8 @@ i18n
             errorPlacingOrder: "There was an error placing your order. Please try again.",
             successPlacingOrder: "Order placed successfully!",
             companyName: "Wall Masters",
-            copyright: "© {{year}} Wall Masters. All rights reserved.",
-            contactInfo: "For Contact Call: +201000544548",
+            copyright: "© {{year}} COCO. All rights reserved.",
+            contactInfo: "For Contact Call: 01222204651",
      
             onePiece: "1 piece",
             threePieces: "3 pieces",
@@ -921,9 +964,65 @@ i18n
       },
       ar: {
         translation: {
+          "privateOccasionsHeading": "للمناسبات الخاصة والتموين",
+          "privateOccasionsText": "يرجى الاتصال على 01222204651 أو ملء النموذج وسنعاود الاتصال بك في اقرب وقت",
+     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+          "Our Branches": "فروعنا",
+          "Explore our branches located in Egypt. Visit us at any of these locations!": 
+            "اكتشف فروعنا في مصر. قم بزيارتنا في أي من هذه المواقع!",
+          "Riverwalk": "ريفر ووك",
+          "New Cairo": "القاهرة الجديدة",
+          "Riverwalk mall, Mohamed Naguib Axis, New Cairo": 
+            "مول ريفر ووك، محور محمد نجيب، القاهرة الجديدة",
+          "Almaza": "الماظه",
+          "Heliopolis": "مصر الجديدة",
+          "City Center Almaza, Suez Road, Heliopolis": 
+            "سيتي سنتر ألماظة، طريق السويس، مصر الجديدة",
+          "Cairo Festival City": "كايرو فستيفال سيتي",
+          "Cairo Festival City Mall, New Cairo": 
+            "كايرو فستيفال سيتي مول، القاهرة الجديدة",
+          "103 Omar Ibn El Khattab, Heliopolis": 
+            "١٠٣ عمر بن الخطاب، مصر الجديدة",
+          "Arkan": "أركان",
+          "Sheikh Zayed": "الشيخ زايد",
+          "Arkan Plaza, 6 of October": 
+            "أركان بلازا، السادس من أكتوبر",
+          "Air Mall": "اير مول",
+          "Madinaty": "مديناتي",
+          "Open Air Mall, Madinaty": 
+            "اير مول، مديناتي",
+          "Come Dine with Us": "تعال لتناول الطعام معنا",
+          "Almaza City Center": "سيتي سنتر ألماظة",
+
+        
+          "River Walk": "ريفر ووك",
+
+          "Arkan Plaza": "أركان بلازا",
+          "Madinaty Open Air Mall": " اير مول  بمديناتي",
+          "Opening Hours": "ساعات العمل",
+          "Sat-Wed": "السبت - الأربعاء",
+          "10am - 12pm": "10 صباحًا - 12 مساءً",
+          "Thu & Fri": "الخميس والجمعة",
+          "10am - 1am​": "10 صباحًا - 1 صباحًا",
+     
+          "branches": "الفروع",
+          "menu": "القائمة",
+          "contact": "تواصل ",
+   
           "each": "لكل قطعه",
           "pieces": "قطع",
           "piece": "قطعه",
+          "businessDays" : "٦ ايام عمل",
           
           "Abstract": "تجريدي",
           "Blue": "أزرق",
@@ -979,8 +1078,8 @@ i18n
           threePieces: "3 قطع",
           showMore: "عرض المزيد",
           companyName: "وول ماسترز",
-          copyright: "© {{year}} وول ماسترز. جميع الحقوق محفوظة.",
-          contactInfo: "للتواصل اتصل: 01000544548",
+          copyright: "© {{year}} كوكو . جميع الحقوق محفوظة.",
+          contactInfo: "للتواصل اتصل: 01222204651 ",
           priceRange: "السعر: {{min}} - {{max}} جنيه",
       availableSizes: "{{count}} {{count, plural, one {حجم} other {أحجام}}} متاحة",
           darkMode: "وضع الظلام",

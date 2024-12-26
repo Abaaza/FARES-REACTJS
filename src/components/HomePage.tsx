@@ -1,151 +1,57 @@
 import React from "react";
 import {
   Box,
-  Button,
-  Heading,
-  FormControl,
-  FormLabel,
-  Input,
-  Textarea,
+  Divider,
+  Grid,
+  GridItem,
+  Image,
+  Text,
   VStack,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import emailjs from "emailjs-com";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next"; // Import useTranslation
-import DesktopProductSlider from "./DesktopProductSlider";
-import MobileProductSlider from "./MobileProductSlider";
+import { useTranslation } from "react-i18next";
 import AutoSlideShow from "./AutoSlideShow";
+import leftpicture from "../assets/19.webp";
+import rightpicture from "../assets/21.webp";
+import image1 from "../assets/37.webp";
+import image2 from "../assets/16.webp";
+import image4 from "../assets/15.webp";
+import image5 from "../assets/17.webp";
+import image7 from "../assets/29.webp";
+import image8 from "../assets/36.jpg";
+import image9 from "../assets/38.jpg";
 
 const HomePage: React.FC = () => {
-  const { t } = useTranslation(); // Initialize useTranslation hook
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
-  // Generate arrays of image URLs for mobile and PC versions
-  const mobileImages = Array.from(
-    { length: 21 },
-    (_, i) => `https://www.wall-masters.com/images/videomobile${i + 1}.webp`
-  );
+  // Array of slideshow images
+  const imagesToShow = [image1, image7, image9, image5, image8, image2, image4];
 
-  const pcImages = Array.from(
-    { length: 22 },
-    (_, i) => `https://www.wall-masters.com/images/videopc${i + 1}.webp`
-  );
-
-  // Determine which images to display based on breakpoint
-  const imagesToShow = useBreakpointValue({
-    base: mobileImages,
-    md: pcImages,
+  // Dynamically adjust the grid layout for mobile and larger screens
+  const gridTemplateColumns = useBreakpointValue({
+    base: "1fr", // Single column layout for mobile
+    md: "1fr auto 1fr", // Two equal columns with an auto-sized divider in between
   });
 
-  // Determine which product slider to display based on breakpoint
-  const ProductSliderToShow = useBreakpointValue({
-    base: MobileProductSlider,
-    md: DesktopProductSlider,
+  // Adjust image size and alignment for mobile and larger screens
+  const imageSize = useBreakpointValue({
+    base: "100vw", // Force the image to be 85% of the viewport width for mobile
+    md: "500px", // Larger image size for desktop
   });
 
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [comment, setComment] = React.useState("");
-
-  const handleSubmit = () => {
-    if (!name || !email || !comment) {
-      alert(t("formAlert"));
-      return;
-    }
-
-    // Prepare data for EmailJS
-    const templateParams = {
-      user_name: name,
-      user_email: email,
-      user_comment: comment,
-    };
-
-    // Send the email using EmailJS
-    emailjs
-      .send(
-        "service_4hrebk8", // Service ID
-        "template_1zxs0jz", // Template ID
-        templateParams,
-        "1mIy5IpEpJPFCN01g" // User ID
-      )
-      .then((response) => {
-        console.log("SUCCESS!", response.status, response.text);
-        alert(t("successMessage"));
-      })
-      .catch((error) => {
-        console.error("FAILED...", error);
-        alert(t("errorMessage"));
-      });
-  };
+  // Adjust font sizes for mobile and desktop
+  const fontSize = useBreakpointValue({
+    base: "s", // Smaller font size for mobile
+    md: "l", // Larger font size for desktop
+  });
 
   const goToProductGrid = () => {
     navigate("/product-grid");
   };
 
-  return (
-    <Box p={5}>
-      {/* AutoSlideShow Component for images */}
-      <Box onClick={goToProductGrid} cursor="pointer">
-        {imagesToShow && <AutoSlideShow images={imagesToShow} />}
-      </Box>
-
-      <Box textAlign="center" mt={10}>
-        <Heading as="h2" size="lg" mb={4}>
-          {t("topSellers")}
-        </Heading>
-      </Box>
-
-      <Box textAlign="center" mt={10}>
-        {/* Conditionally render the appropriate product slider */}
-        {ProductSliderToShow && <ProductSliderToShow />}
-      </Box>
-
-      <Box mt={10} width="85%" mx="auto">
-        <Heading as="h2" size="lg" mb={4} textAlign="center">
-          {t("contactUs")}
-        </Heading>
-        <VStack spacing={4} align="stretch">
-          <FormControl id="name">
-            <FormLabel>{t("nameLabel")}</FormLabel>
-            <Input
-              placeholder={t("namePlaceholder")}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </FormControl>
-
-          <FormControl id="email">
-            <FormLabel>{t("emailLabel")}</FormLabel>
-            <Input
-              type="email"
-              placeholder={t("emailPlaceholder")}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </FormControl>
-
-          <FormControl id="comment">
-            <FormLabel>{t("commentLabel")}</FormLabel>
-            <Textarea
-              placeholder={t("commentPlaceholder")}
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
-          </FormControl>
-
-          <Button
-            colorScheme="teal"
-            size="lg"
-            alignSelf="center"
-            onClick={handleSubmit}
-          >
-            {t("submitButton")}
-          </Button>
-        </VStack>
-      </Box>
-    </Box>
-  );
+  return <Box p={5}></Box>;
 };
 
 export default HomePage;

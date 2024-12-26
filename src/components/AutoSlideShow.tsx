@@ -12,20 +12,40 @@ const AutoSlideShow: React.FC<AutoSlideShowProps> = ({ images }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 800);
+    }, 2000); // Adjusted to 2 seconds for slideshow interval
 
-    // Clean up interval on component unmount
     return () => clearInterval(interval);
   }, [images.length]);
 
+  // Determine aspect ratio based on screen size, with a default value
+  const aspectRatio =
+    useBreakpointValue({
+      base: 4 / 3, // 4:2 aspect ratio for mobile
+      md: 3 / 1, // 3:2 aspect ratio for desktop
+    }) || 2 / 1; // Default aspect ratio if useBreakpointValue returns undefined
+
   return (
     <Box width="100%" overflow="hidden">
-      <Image
-        src={images[currentIndex]}
-        alt={`Slide ${currentIndex}`}
+      {/* Use aspectRatio to maintain specific ratio */}
+      <Box
         width="100%"
         height="auto"
-      />
+        sx={{
+          position: "relative",
+          paddingBottom: `${100 / aspectRatio}%`, // Maintain the aspect ratio
+        }}
+      >
+        <Image
+          src={images[currentIndex]}
+          alt={`Slide ${currentIndex}`}
+          position="absolute"
+          top="0"
+          left="0"
+          width="100%"
+          height="100%"
+          objectFit="cover" // Ensure the image covers the entire area
+        />
+      </Box>
     </Box>
   );
 };
